@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "433813103118",
+    "firebase_url": "https://billy-304a6.firebaseio.com",
+    "project_id": "billy-304a6",
+    "storage_bucket": "billy-304a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433813103118:android:a438a5377a89c616d5925f",
+        "android_client_info": {
+          "package_name": "app.hks.billy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433813103118-oplu17h668b106ji3usfjltdo7vgvidg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.hks.billy",
+            "certificate_hash": "7f8efca1b4746585f9b904fd99fde2ff6b195e12"
+          }
+        },
+        {
+          "client_id": "433813103118-68qmt3d8ie691skr6qkg24u5ett6dmlg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm1meabbB-7K5Rvn0fbOwbICox7RhCRiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "433813103118-68qmt3d8ie691skr6qkg24u5ett6dmlg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
