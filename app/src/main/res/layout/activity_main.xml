@@ -42,6 +42,7 @@
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:text="New Bill"
+        android:textSize="14dp"
         android:textColor="@color/completeWhiteColor"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
