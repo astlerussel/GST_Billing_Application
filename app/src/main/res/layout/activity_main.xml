@@ -28,13 +28,25 @@
         layout="@layout/information_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="08dp"
         android:layout_marginEnd="08dp"
         android:layout_marginStart="08dp"
         android:layout_marginBottom="08dp"
         android:layout_below="@+id/main_company_details_card_view">
 
     </include>
+
+
+    <Button
+        android:id="@+id/create_new_bill_button"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:text="New Bill"
+        android:textColor="@color/completeWhiteColor"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/create_new_bill_button_style"/>
 
 
 </RelativeLayout>
