@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/mainBackground"
+    tools:context=".MainActivity"
+    >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/main_app_name_toolbar"
+        layout="@layout/app_toolbar_layout"
+        >
+    </include>
+
+    <include
+        android:id="@+id/main_company_details_card_view"
+        layout="@layout/self_details_card_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hitesh Kumat"
-        android:textSize="45dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_below="@+id/main_app_name_toolbar">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    </include>
+
+
+</RelativeLayout>
