@@ -3,8 +3,14 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="mainBackground">#f0f1f1</color>
+    <color name="mainBackground">#e6e6e6</color>
     <color name="whiteBackgroundTextColor">#777b7e</color>
     <color name="blueBackground">#00a7d1</color>
     <color name="completeWhiteColor">#ffffff</color>
+
+
+    <color name="orange_gradient">#FEAC5E</color>
+    <color name="pinkish_gradient">#C779D0</color>
+    <color name="blueish_gradient">#4BC0C8</color>
+
 </resources>

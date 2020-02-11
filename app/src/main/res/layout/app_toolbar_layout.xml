@@ -5,9 +5,10 @@
     android:id="@+id/app_toolbar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/completeWhiteColor"
+    android:background="#f9fdff"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    app:titleTextColor="#777b7e"
+    app:titleTextColor="#bd42ff"
+    android:elevation="0.7dp"
     >
 
 </androidx.appcompat.widget.Toolbar>
