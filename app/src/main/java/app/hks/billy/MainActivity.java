@@ -1,17 +1,24 @@
 package app.hks.billy;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Toolbar mToolBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(MainActivity.this, "Hello World", Toast.LENGTH_SHORT).show();
+        mToolBar = findViewById(R.id.main_app_name_toolbar);
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setTitle("Billy");
+
+
     }
 }
