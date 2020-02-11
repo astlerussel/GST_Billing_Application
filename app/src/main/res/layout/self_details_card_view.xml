@@ -21,37 +21,42 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:padding="10dp"
             >
 
             <TextView
+                android:id="@+id/cardview_company_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Company Name"
-                android:textSize="20dp"
+                android:textSize="24dp"
                 android:textStyle="bold"
                 android:textColor="@color/blueBackground"
                 />
 
             <TextView
+                android:id="@+id/cardview_company_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Address Field"
+                android:text="Address Field vvf rg g rg rg  rg r gr srg rg srr grs rbr br  sr g gsr rsg  sr rsr sr sr rsg rs rsfrsrgrgrgrgrgrg rgrsgrgrrg rfrgrgrgrgrgrg rgrgrggrgrgrgrgg
+rgrg rsgrsgsrgrsg rgsrgsrg rgsrgrsgrsgrsgrg srgsrgsrgrg"
                 android:textSize="15dp"
-                android:lineSpacingMultiplier="1"
+                android:lineSpacingMultiplier="1.1"
                 android:maxLines="3"
-                android:maxLength="30"
                 android:layout_marginTop="8dp"
                 />
 
             <TextView
+                android:id="@+id/cardview_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="17dp"
                 android:hint="DATE"
                 android:textSize="14dp"/>
 
             <LinearLayout
+                android:id="@+id/cardview_edit_company_details_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

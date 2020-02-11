@@ -7,4 +7,10 @@
     <color name="whiteBackgroundTextColor">#777b7e</color>
     <color name="blueBackground">#00a7d1</color>
     <color name="completeWhiteColor">#ffffff</color>
+
+
+    <color name="orange_gradient">#FEAC5E</color>
+    <color name="pinkish_gradient">#C779D0</color>
+    <color name="blueish_gradient">#4BC0C8</color>
+
 </resources>

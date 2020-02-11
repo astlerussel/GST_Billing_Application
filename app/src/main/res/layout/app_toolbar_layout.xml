@@ -7,8 +7,8 @@
     android:layout_height="wrap_content"
     android:background="@color/completeWhiteColor"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    app:titleTextColor="#777b7e"
-    android:elevation="0.5dp"
+    app:titleTextColor="#bd42ff"
+    android:elevation="0.7dp"
     >
 
 </androidx.appcompat.widget.Toolbar>
