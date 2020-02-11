@@ -64,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            Intent intent = new Intent(MainActivity.this, AuthActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             startActivity(intent);
-        } else {
+        }/*else {
             String uid = mAuth.getCurrentUser().getUid();
             final DocumentReference documentReference = firebaseFirestore.collection("users").document(uid);
             documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-        }
+        }*/
     }
 }
 
