@@ -99,7 +99,7 @@ public class VerifyActivity extends AppCompatActivity {
 
                             Map<String, String> userMap = new HashMap<>();
 
-                            userMap.put("user_phone_number", phone);
+                            userMap.put("company_phone_number", phone);
                             userMap.put("uid", uid);
 
                             firebaseFirestore.collection("users")
