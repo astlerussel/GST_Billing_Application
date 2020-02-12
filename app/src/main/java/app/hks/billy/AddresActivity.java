@@ -22,59 +22,54 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import static maes.tech.intentanim.CustomIntent.customType;
 
-import java.util.HashMap;
-import java.util.Map;
+public class AddresActivity extends AppCompatActivity {
 
-public class DetailsActivity extends AppCompatActivity {
-
-    private EditText myCompanyName;
-    private Button nxtButton;
-
-
+    private EditText eAddress;
+    private Button bNextButton;
+    private Button bBcackButton;
 
     private FirebaseFirestore firebaseFirestore;
-    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+        setContentView(R.layout.activity_addres);
 
-        myCompanyName = (EditText) findViewById(R.id.detail_company_name_edit_text);
-        nxtButton = (Button) findViewById(R.id.details_next_button);
+        eAddress = (EditText) findViewById(R.id.addres_company_address_edit_text);
+        bNextButton = (Button) findViewById(R.id.addres_activity_next_button);
+        bBcackButton = (Button) findViewById(R.id.addres_activity_back_button);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-
-        nxtButton.setOnClickListener(new View.OnClickListener() {
+        bNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final String companyName = myCompanyName.getText().toString();
+                final String companyAddress = eAddress.getText().toString();
                 final String userId = FirebaseAuth.getInstance().getUid();
 
-
-                if(companyName.isEmpty())
+                if(companyAddress.isEmpty())
                 {
-                    myCompanyName.setError("Mandatory Field...");
-                    myCompanyName.requestFocus();
+                    eAddress.setError("Mandatory Field...");
+                    eAddress.requestFocus();
                 }
-                if(!companyName.isEmpty())
+                if(!companyAddress.isEmpty())
                 {
 
                     DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(userId);
 
-                    docRef.update("company_name", companyName)
+                    docRef.update("company_address", companyAddress)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
 
-                                    Toast.makeText(DetailsActivity.this,"Data Added succesfully", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AddresActivity.this,"Data Added succesfully", Toast.LENGTH_LONG).show();
 
-                                    Intent intent = new Intent(DetailsActivity.this, NameActivity.class);
+                                    Intent intent = new Intent(AddresActivity.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
-                                    //customType(DetailsActivity.this,"bottom-to-up");
-                                    overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                                    customType(AddresActivity.this,"bottom-to-up");
+
 
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -82,44 +77,24 @@ public class DetailsActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
 
                             String error = e.getMessage();
-                            Toast.makeText(DetailsActivity.this, "Error"+error , Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddresActivity.this, "Error"+error , Toast.LENGTH_LONG).show();
 
                         }
                     });
                 }
+
+
             }
         });
 
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-        //overridePendingTransition(R.anim.up_to_bottom, R.anim.bottom_to_up);
-
-        customType(DetailsActivity.this,"up-to-bottom");
-
-
-        /*
-         *left-to-right
-         *right-to-left
-         *bottom-to-up
-         *up-to-bottom
-         *fadein-to-fadeout
-         *rotateout-to-rotatein
-         */
-
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-
-        //overridePendingTransition(R.anim.up_to_bottom, R.anim.bottom_to_up);
-
-        customType(DetailsActivity.this,"up-to-bottom");
+        bBcackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddresActivity.this, NameActivity.class);
+                startActivity(intent);
+                customType(AddresActivity.this,"up-to-bottom");
+            }
+        });
     }
 
     @Override
@@ -133,7 +108,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
-                myCompanyName.setText(documentSnapshot.getString("company_name"));
+                eAddress.setText(documentSnapshot.getString("company_address"));
             }
         });
     }

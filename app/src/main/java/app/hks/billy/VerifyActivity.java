@@ -101,7 +101,7 @@ public class VerifyActivity extends AppCompatActivity {
 
                             userMap.put("user_phone_number", phone);
                             userMap.put("uid", uid);
-                            userMap.put("name", "");
+                            userMap.put("owners_name", "");
 
                             firebaseFirestore.collection("users")
                                     .document(uid)
