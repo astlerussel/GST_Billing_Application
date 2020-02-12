@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@color/mainBackground"
     app:cardElevation="0dp"
+    app:background="@drawable/count_card_view_shape_start"
     >
 
 

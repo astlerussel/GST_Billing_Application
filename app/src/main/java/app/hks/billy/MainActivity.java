@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //ADDING VALUES TO SELF INFORMANTION CARD VIEW
+        //ADDING VALUES TO SELF INFORMATION CARD VIEW
         selfInfoCardView = (CardView) findViewById(R.id.main_company_details_card_view);
         tCompanyName = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_name);
         tOwnerName = (TextView) selfInfoCardView.findViewById(R.id.cardview_owner_name);
