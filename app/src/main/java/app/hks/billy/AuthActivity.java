@@ -13,6 +13,7 @@ public class AuthActivity extends AppCompatActivity {
 
     private Spinner spinner;
     private EditText editText;
+    private String s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
