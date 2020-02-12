@@ -10,6 +10,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private CardView countCardView;
     private FirebaseFirestore firebaseFirestore;
 
+    private EditText ecompanyName;
+
     private FirebaseAuth mAuth;
 
     @Override
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         countCardView = (CardView) findViewById(R.id.count_cardview);
         newBillButton = (Button) findViewById(R.id.create_new_bill_button);
+
 
 
         newBillButton.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }*/
+
     }
 }
 

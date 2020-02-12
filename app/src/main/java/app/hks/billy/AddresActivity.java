@@ -20,6 +20,9 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static maes.tech.intentanim.CustomIntent.customType;
 
 public class AddresActivity extends AppCompatActivity {
@@ -29,6 +32,8 @@ public class AddresActivity extends AppCompatActivity {
     private Button bBcackButton;
 
     private FirebaseFirestore firebaseFirestore;
+
+    String lcompanyName, lOwnerName, lCompanyAddress, lUsersPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +86,26 @@ public class AddresActivity extends AppCompatActivity {
 
                         }
                     });
+
+                    DocumentReference docNewColRef = FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(userId)
+                            .collection("self_info")
+                            .document(userId);
+
+                    docNewColRef.update("company_address", companyAddress)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
                 }
 
 
@@ -96,6 +121,7 @@ public class AddresActivity extends AppCompatActivity {
             }
         });
     }
+
 
     @Override
     protected void onStart() {

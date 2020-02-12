@@ -86,6 +86,25 @@ public class DetailsActivity extends AppCompatActivity {
 
                         }
                     });
+
+                    DocumentReference docNewColRef = FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(userId)
+                            .collection("self_info")
+                            .document(userId);
+
+                            docNewColRef.update("company_name", companyName)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
                 }
             }
         });

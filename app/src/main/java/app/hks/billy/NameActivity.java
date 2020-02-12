@@ -82,6 +82,25 @@ public class NameActivity extends AppCompatActivity {
 
                         }
                     });
+
+                    DocumentReference docNewColRef = FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(userId)
+                            .collection("self_info")
+                            .document(userId);
+
+                    docNewColRef.update("owners_name", ownerName)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
                 }
             }
         });

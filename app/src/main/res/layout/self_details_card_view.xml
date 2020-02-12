@@ -40,8 +40,7 @@
                 android:id="@+id/cardview_company_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Address Field vvf rg g rg rg  rg r gr srg rg srr grs rbr br  sr g gsr rsg  sr rsr sr sr rsg rs rsfrsrgrgrgrgrgrg rgrsgrgrrg rfrgrgrgrgrgrg rgrgrggrgrgrgrgg
-rgrg rsgrsgsrgrsg rgsrgsrg rgsrgrsgrsgrsgrg srgsrgsrgrg"
+                android:text="Address Field"
                 android:textSize="15dp"
                 android:lineSpacingMultiplier="1.1"
                 android:maxLines="3"
