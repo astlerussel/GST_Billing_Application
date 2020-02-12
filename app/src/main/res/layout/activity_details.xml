@@ -1,9 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/details_company_name"
     tools:context=".DetailsActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/detail_company_name_textview"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Enter the Company Name"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="50dp"
+        android:textSize="26dp"
+        android:textStyle="bold"
+        android:textColor="#67E6DC"
+        />
+
+    <EditText
+        android:id="@+id/detail_company_name_edit_text"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/detail_company_name_textview"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="50dp"
+        android:ems="30"
+        android:maxLines="1"
+        android:background="@drawable/reg_edittext_style"
+        android:hint="Company Name" />
+
+    <Button
+        android:id="@+id/details_next_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="Next"
+        android:textSize="14dp"
+        android:layout_marginBottom="125dp"
+        android:layout_marginStart="225dp"
+        android:background="@drawable/reg_btn_style"
+        android:layout_alignParentBottom="true"
+        android:textColor="#ffffff"
+        />
+
+</RelativeLayout>
