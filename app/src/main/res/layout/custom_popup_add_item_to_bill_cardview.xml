@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/completeWhiteColor"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ADD ITEM"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:textColor="@color/blueBackground"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RadioGroup
+                        android:id="@+id/radio_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="06dp"
+                        android:layout_marginBottom="06dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp">
+
+                        <RadioButton
+                            android:id="@+id/enter_barcode_dialog_radio_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Enter Barcode"
+                            android:layout_marginBottom="06dp"
+                            android:layout_marginTop="06dp"
+                            />
+
+                        <RadioButton
+                            android:id="@+id/enter_details_dialog_radio_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Enter Details ( To add new item to database )"
+                            android:layout_marginBottom="06dp"
+                            android:layout_marginTop="06dp"
+                            />
+
+
+                    </RadioGroup>
+
+
+                        <LinearLayout
+                            android:id="@+id/fields_layout_for_radio1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_below="@+id/radio_group"
+                            >
+
+
+                            <LinearLayout
+                                android:id="@+id/enter_details_below_barcode_radio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="visible"
+                                android:layout_marginBottom="06dp">
+
+                                <EditText
+                                    android:id="@+id/enter_barcode_edit_text_radio1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="42dp"
+                                    android:hint="Enter The Product Bar Code"
+                                    android:background="@drawable/reg_edittext_style"
+                                    android:layout_marginStart="25dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginTop="06dp"
+                                    android:layout_marginBottom="06dp"
+                                    android:visibility="gone"
+                                    />
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/fields_layour_for_radio2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_below="@+id/radio_group"
+                            >
+
+
+
+                            <LinearLayout
+                                android:id="@+id/enter_details_below_enter_details_radio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                >
+
+                                <EditText
+                                    android:id="@+id/enter_barcode_edit_text_radio2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="42dp"
+                                    android:hint="Enter Barcode"
+                                    android:background="@drawable/reg_edittext_style"
+                                    android:layout_marginStart="25dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginTop="06dp"
+                                    android:layout_marginBottom="06dp"
+                                    android:visibility="gone"
+                                    />
+
+                                <EditText
+                                    android:id="@+id/enter_item_name_edit_text_radio2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="42dp"
+                                    android:hint="Enter Item Name"
+                                    android:lines="2"
+                                    android:lineSpacingExtra="0.5dp"
+                                    android:background="@drawable/reg_edittext_style"
+                                    android:layout_marginStart="25dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginTop="06dp"
+                                    android:layout_marginBottom="06dp"
+                                    android:visibility="gone"
+                                    />
+
+                                <EditText
+                                    android:id="@+id/enter_item_weight_edit_text_radio2"
+                                    android:layout_width="175dp"
+                                    android:layout_height="42dp"
+                                    android:hint="Enter Item Weight"
+                                    android:background="@drawable/reg_edittext_style"
+                                    android:layout_marginStart="25dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginTop="06dp"
+                                    android:layout_marginBottom="06dp"
+                                    android:visibility="gone"
+                                    />
+
+                                <EditText
+                                    android:id="@+id/enter_item_cost_edit_text_radio2"
+                                    android:layout_width="200dp"
+                                    android:layout_height="42dp"
+                                    android:hint="Enter Item Cost"
+                                    android:background="@drawable/reg_edittext_style"
+                                    android:layout_marginStart="25dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginTop="06dp"
+                                    android:layout_marginBottom="06dp"
+                                    android:visibility="gone"
+                                    />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="05dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                       <RelativeLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content">
+
+                           <Button
+                               android:id="@+id/cancel_item_card_button"
+                               android:layout_width="89dp"
+                               android:layout_height="36dp"
+                               android:text="CANCEL"
+                               android:textColor="@color/completeWhiteColor"
+                               android:layout_alignParentTop="true"
+                               android:layout_alignParentStart="true"
+                               android:background="@drawable/reg_btn_style"
+                               android:layout_marginStart="30dp"
+                               />
+
+                           <Button
+                               android:id="@+id/add_item_card_button"
+                               android:layout_width="89dp"
+                               android:layout_height="36dp"
+                               android:text="ADD"
+                               android:textColor="@color/completeWhiteColor"
+                               android:layout_alignParentEnd="true"
+                               android:layout_alignParentTop="true"
+                               android:background="@drawable/reg_btn_style"
+                               android:layout_marginEnd="30dp"
+                               android:visibility="invisible"
+                               />
+
+                       </RelativeLayout>
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
+</RelativeLayout>
