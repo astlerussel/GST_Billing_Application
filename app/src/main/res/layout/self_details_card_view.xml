@@ -2,16 +2,21 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/self_details_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/mainBackground"
     app:cardElevation="0dp"
+    android:clickable="true"
     >
     <RelativeLayout
+        android:id="@+id/card_border"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:background="@drawable/card_view_shape"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         >
 
         <LinearLayout
@@ -30,30 +35,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Company Name"
-                android:textSize="24dp"
+                android:textSize="26dp"
                 android:textStyle="bold"
                 android:textColor="@color/blueBackground"
+                />
+
+            <TextView
+                android:id="@+id/cardview_owner_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Owner Name"
+                android:textSize="16dp"
+                android:layout_marginTop="17dp"
                 />
 
             <TextView
                 android:id="@+id/cardview_company_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Address Field vvf rg g rg rg  rg r gr srg rg srr grs rbr br  sr g gsr rsg  sr rsr sr sr rsg rs rsfrsrgrgrgrgrgrg rgrsgrgrrg rfrgrgrgrgrgrg rgrgrggrgrgrgrgg
-rgrg rsgrsgsrgrsg rgsrgsrg rgsrgrsgrsgrsgrg srgsrgsrgrg"
+                android:text="Address Field"
                 android:textSize="15dp"
                 android:lineSpacingMultiplier="1.1"
                 android:maxLines="3"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="17dp"
                 />
 
             <TextView
-                android:id="@+id/cardview_date"
+                android:id="@+id/cardview_company_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="17dp"
-                android:hint="DATE"
-                android:textSize="14dp"/>
+                android:hint="Number"
+                android:textSize="14dp"
+                />
+
 
             <LinearLayout
                 android:id="@+id/cardview_edit_company_details_button"

@@ -10,6 +10,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,10 +29,16 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolBar;
     private Button newBillButton;
 
+    private CardView selfInfoCardView;
     private CardView countCardView;
     private FirebaseFirestore firebaseFirestore;
 
+
+    private TextView tCompanyName, tOwnerName, tCompanyAddress, tOwnerPhoneNUmber;
+
     private FirebaseAuth mAuth;
+
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getUid();
 
         countCardView = (CardView) findViewById(R.id.count_cardview);
         newBillButton = (Button) findViewById(R.id.create_new_bill_button);
@@ -58,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
+
+
+
 
     @Override
     protected void onStart() {
@@ -98,6 +112,28 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }*/
+
+
+
+        //ADDING VALUES TO SELF INFORMATION CARD VIEW
+        selfInfoCardView = (CardView) findViewById(R.id.main_company_details_card_view);
+        tCompanyName = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_name);
+        tOwnerName = (TextView) selfInfoCardView.findViewById(R.id.cardview_owner_name);
+        tCompanyAddress = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_address);
+        tOwnerPhoneNUmber = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_phone_number);
+
+        DocumentReference docRef = firebaseFirestore.collection("users").document(userId);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                tCompanyName.setText(documentSnapshot.getString("company_name"));
+                tOwnerName.setText(documentSnapshot.getString("owners_name"));
+                tCompanyAddress.setText(documentSnapshot.getString("company_address"));
+                tOwnerPhoneNUmber.setText(documentSnapshot.getString("company_phone_number"));
+
+            }
+        });
+
     }
 }
 

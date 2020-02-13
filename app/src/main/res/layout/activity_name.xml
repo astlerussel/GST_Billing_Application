@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NameActivity"
+    android:background="@drawable/name_activity_background">
+
+    <TextView
+        android:id="@+id/name_activity_owner_name_textview"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Enter The Owner's Name"
+        android:layout_marginEnd="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="50dp"
+        android:textSize="26dp"
+        android:textStyle="bold"
+        android:textColor="#67E6DC"
+        />
+
+    <EditText
+        android:id="@+id/name_activity_owner_name_edit_text"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/name_activity_owner_name_textview"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/reg_edittext_style"
+        android:hint="Name" />
+
+
+    <Button
+        android:id="@+id/name_activity_next_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="Next"
+        android:textSize="14dp"
+        android:layout_marginBottom="125dp"
+        android:layout_marginEnd="28dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/reg_btn_style"
+        android:layout_alignParentBottom="true"
+        android:textColor="#ffffff"
+        />
+
+    <Button
+        android:id="@+id/name_activity_back_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="Back"
+        android:textSize="14dp"
+        android:layout_marginBottom="125dp"
+        android:layout_marginEnd="225dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="#25CCF7"
+        android:background="@drawable/reg_btn_style_2"
+        />
+
+</RelativeLayout>

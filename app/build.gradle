@@ -6,7 +6,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "app.hks.billy"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1
@@ -29,14 +29,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation 'com.google.firebase:firebase-firestore:21.4.0'
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.firebase:firebase-core:17.2.2'
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
     implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
-    implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
-    implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
-    implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.github.hajiyevelnur92:intentanimation:1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

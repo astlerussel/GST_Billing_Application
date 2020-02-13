@@ -5,9 +5,9 @@
     android:id="@+id/app_toolbar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f9fdff"
+    android:background="@color/mainBackground"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    app:titleTextColor="#bd42ff"
+    app:titleTextColor="#005bea"
     android:elevation="0.7dp"
     >
 

@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/details_company_name"
-    tools:context=".DetailsActivity">
+    tools:context=".AddresActivity"
+    android:background="@drawable/details_company_name">
 
     <TextView
-        android:id="@+id/detail_company_name_textview"
+        android:id="@+id/addres_company_address_textview"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Enter the Company Name"
+        android:text="Enter Company Address"
         android:layout_marginStart="24dp"
         android:layout_marginTop="50dp"
         android:textSize="26dp"
@@ -20,19 +20,20 @@
         />
 
     <EditText
-        android:id="@+id/detail_company_name_edit_text"
+        android:id="@+id/addres_company_address_edit_text"
         android:layout_width="300dp"
         android:layout_height="45dp"
-        android:layout_below="@+id/detail_company_name_textview"
+        android:layout_below="@+id/addres_company_address_textview"
         android:layout_marginStart="24dp"
         android:layout_marginTop="50dp"
         android:ems="30"
         android:maxLines="1"
         android:background="@drawable/reg_edittext_style"
-        android:hint="Company Name" />
+        android:hint="Address" />
+
 
     <Button
-        android:id="@+id/details_next_button"
+        android:id="@+id/addres_activity_next_button"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:text="Next"
@@ -41,7 +42,22 @@
         android:layout_marginStart="225dp"
         android:background="@drawable/reg_btn_style"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:textColor="#ffffff"
+        />
+
+    <Button
+        android:id="@+id/addres_activity_back_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="Back"
+        android:textSize="14dp"
+        android:layout_marginBottom="125dp"
+        android:layout_marginStart="28dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="#25CCF7"
+        android:background="@drawable/reg_btn_style_2"
         />
 
 </RelativeLayout>

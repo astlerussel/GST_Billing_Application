@@ -22,15 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import static maes.tech.intentanim.CustomIntent.customType;
 
-import java.util.HashMap;
-import java.util.Map;
+public class NameActivity extends AppCompatActivity {
 
-public class DetailsActivity extends AppCompatActivity {
-
-    private EditText myCompanyName;
-    private Button nxtButton;
-
-
+    private EditText eOwnerName;
+    private Button bNextButton;
+    private Button bBackButton;
 
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
@@ -38,43 +34,43 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+        setContentView(R.layout.activity_name);
 
-        myCompanyName = (EditText) findViewById(R.id.detail_company_name_edit_text);
-        nxtButton = (Button) findViewById(R.id.details_next_button);
+        eOwnerName = (EditText) findViewById(R.id.name_activity_owner_name_edit_text);
+        bNextButton = (Button) findViewById(R.id.name_activity_next_button);
+        bBackButton = (Button) findViewById(R.id.name_activity_back_button);
+
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
 
-        nxtButton.setOnClickListener(new View.OnClickListener() {
+        bNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final String companyName = myCompanyName.getText().toString();
+                final String ownerName = eOwnerName.getText().toString();
                 final String userId = FirebaseAuth.getInstance().getUid();
 
-
-                if(companyName.isEmpty())
+                if(ownerName.isEmpty())
                 {
-                    myCompanyName.setError("Mandatory Field...");
-                    myCompanyName.requestFocus();
+                    eOwnerName.setError("Mandatory Field...");
+                    eOwnerName.requestFocus();
                 }
-                if(!companyName.isEmpty())
+                if(!ownerName.isEmpty())
                 {
 
                     DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(userId);
 
-                    docRef.update("company_name", companyName)
+                    docRef.update("owners_name", ownerName)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
 
-                                    Toast.makeText(DetailsActivity.this,"Data Added succesfully", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(NameActivity.this,"Data Added succesfully", Toast.LENGTH_LONG).show();
 
-                                    Intent intent = new Intent(DetailsActivity.this, NameActivity.class);
+                                    Intent intent = new Intent(NameActivity.this, AddresActivity.class);
                                     startActivity(intent);
-                                    //customType(DetailsActivity.this,"bottom-to-up");
-                                    overridePendingTransition(R.anim.bottom_to_up, R.anim.up_to_bottom);
+                                    customType(NameActivity.this,"bottom-to-up");
 
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -82,7 +78,7 @@ public class DetailsActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
 
                             String error = e.getMessage();
-                            Toast.makeText(DetailsActivity.this, "Error"+error , Toast.LENGTH_LONG).show();
+                            Toast.makeText(NameActivity.this, "Error"+error , Toast.LENGTH_LONG).show();
 
                         }
                     });
@@ -93,52 +89,32 @@ public class DetailsActivity extends AppCompatActivity {
                             .collection("self_info")
                             .document(userId);
 
-                            docNewColRef.update("company_name", companyName)
+                    docNewColRef.update("owners_name", ownerName)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
 
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
 
-                                }
-                            });
+                        }
+                    });
                 }
             }
         });
 
 
-    }
+        bBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-        //overridePendingTransition(R.anim.up_to_bottom, R.anim.bottom_to_up);
-
-        customType(DetailsActivity.this,"up-to-bottom");
-
-
-        /*
-         *left-to-right
-         *right-to-left
-         *bottom-to-up
-         *up-to-bottom
-         *fadein-to-fadeout
-         *rotateout-to-rotatein
-         */
-
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-
-        //overridePendingTransition(R.anim.up_to_bottom, R.anim.bottom_to_up);
-
-        customType(DetailsActivity.this,"up-to-bottom");
+                Intent intent = new Intent(NameActivity.this, DetailsActivity.class);
+                startActivity(intent);
+                customType(NameActivity.this,"up-to-bottom");
+            }
+        });
     }
 
     @Override
@@ -152,7 +128,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
-                myCompanyName.setText(documentSnapshot.getString("company_name"));
+                eOwnerName.setText(documentSnapshot.getString("owners_name"));
             }
         });
     }

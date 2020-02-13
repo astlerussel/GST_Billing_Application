@@ -99,9 +99,8 @@ public class VerifyActivity extends AppCompatActivity {
 
                             Map<String, String> userMap = new HashMap<>();
 
-                            userMap.put("user_phone_number", phone);
+                            userMap.put("company_phone_number", phone);
                             userMap.put("uid", uid);
-                            userMap.put("name", "");
 
                             firebaseFirestore.collection("users")
                                     .document(uid)
@@ -113,6 +112,23 @@ public class VerifyActivity extends AppCompatActivity {
                                             Intent intent = new Intent(VerifyActivity.this, DetailsActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(intent);
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+
+                            firebaseFirestore.collection("users")
+                                    .document(uid)
+                                    .collection("self_info")
+                                    .document(uid)
+                                    .set(userMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
 
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
