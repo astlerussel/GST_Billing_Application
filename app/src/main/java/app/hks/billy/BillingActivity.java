@@ -1,5 +1,6 @@
 package app.hks.billy;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
@@ -15,6 +16,18 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class BillingActivity extends AppCompatActivity {
 
     private Button addNewItemButton;
@@ -26,18 +39,23 @@ public class BillingActivity extends AppCompatActivity {
 
     private Dialog addNewItemDialog;
 
-    private LinearLayout layoutForRadio1, layoutForRadio2;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
+    private String userId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billing);
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        //userId = firebaseAuth.getCurrentUser().getUid();
+
         addNewItemButton = (Button) findViewById(R.id.billing_add_item_button);
         radioButton1 = (RadioButton) findViewById(R.id.enter_barcode_dialog_radio_button);
         radioButton2 = (RadioButton) findViewById(R.id.enter_details_dialog_radio_button);
-        layoutForRadio1 = (LinearLayout) findViewById(R.id.fields_layout_for_radio1);
-        layoutForRadio2 = (LinearLayout) findViewById(R.id.fields_layour_for_radio2);
 
 
 
@@ -94,8 +112,30 @@ public class BillingActivity extends AppCompatActivity {
 
                             addNewItemButton.setVisibility(View.VISIBLE);
 
-
                             Toast.makeText(BillingActivity.this, "ID : "+ checkRadioInput, Toast.LENGTH_LONG);
+
+                            addNewItemButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    //THIS WILL FIRST FETCH THE ENTERED BARCODE DETAILS FROM DATABASE AND ADD IT TO A NEW COLLECTION->DOCUMENT OF ITEMS
+                                    final String barcode1  = barcodeRadio1.getText().toString();
+
+                                    if(barcode1.isEmpty())
+                                    {
+                                        barcodeRadio1.setError("Mandatory Field!!!");
+                                        barcodeRadio1.requestFocus();
+                                    }
+                                    if(!barcode1.isEmpty())
+                                    {
+                                        //FETCHING THE BARCODE DETAILS FROM DATABASE
+
+
+                                        //CREATING A COLLECTION->DOCUMENT AND ADDING BARCODE DETAILS TO THAT
+                                    }
+
+                                }
+                            });
 
                         }
                         else if(checkRadioInput == R.id.enter_details_dialog_radio_button)
@@ -112,6 +152,58 @@ public class BillingActivity extends AppCompatActivity {
                             addNewItemButton.setVisibility(View.VISIBLE);
 
                             Toast.makeText(BillingActivity.this, "ID : "+checkRadioInput, Toast.LENGTH_LONG);
+
+
+                            addNewItemButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    final String barcode = barcodeRadio2.getText().toString();
+                                    final String itemName = itemNameRadio2.getText().toString();
+                                    final String itemWeight = itemWeightRadio2.getText().toString();
+                                    final String itemCost = itemCostRadio2.getText().toString();
+
+                                    if(barcode.length() != 13)
+                                    {
+                                        barcodeRadio2.setError("Invalid Input!!");
+                                        barcodeRadio2.requestFocus();
+                                    }
+                                    if(barcode.isEmpty())
+                                    {
+                                        barcodeRadio2.setError("Mandatory Field!!");
+                                        barcodeRadio2.requestFocus();
+                                    }
+                                    if(itemName.isEmpty())
+                                    {
+                                        itemNameRadio2.setError("Mandatory Field!!");
+                                        itemNameRadio2.requestFocus();
+                                    }
+                                    if(itemWeight.isEmpty())
+                                    {
+                                        itemWeightRadio2.setError("Mandatory Field!!");
+                                        itemWeightRadio2.requestFocus();
+                                    }
+                                    if(itemCost.isEmpty())
+                                    {
+                                        itemCostRadio2.setError("Mandatory Field!!");
+                                        itemCostRadio2.requestFocus();
+                                    }
+                                    if(!barcode.isEmpty() && !itemName.isEmpty() && !itemWeight.isEmpty() && !itemCost.isEmpty())
+                                    {
+
+                                        //FIRST CHECK WHETHER BARCODE EXISITS IN DATABASE OR NOT
+                                        checkIfBarcodeAlreadyExistsInDatabase();
+
+                                        //ADDING DETAILS TO A NEW BARCODE DATABASE
+                                        //addDetailsToDataBase();
+                                    }
+
+
+                                }
+                            });
+
+
+
                         }
 
 
@@ -119,14 +211,74 @@ public class BillingActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
 
 
+    }
 
+    private void checkIfBarcodeAlreadyExistsInDatabase() {
 
+        DocumentReference docRef = firebaseFirestore.collection("items_database").document(barcodeRadio2.getText().toString());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if(task.isSuccessful())
+                {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+
+                    if(documentSnapshot.exists())
+                    {
+                        barcodeRadio2.setError("Item Already Exists!!!");
+                        barcodeRadio2.requestFocus();
+                        Toast.makeText(BillingActivity.this, "Please Select ENTER BARCODE Option.", Toast.LENGTH_LONG).show();
+
+                    }
+                    else if(!documentSnapshot.exists())
+                    {
+
+                        addDetailsToDataBase();
+                    }
+                }
+                else
+                {
+
+                }
 
             }
         });
 
+
+    }
+
+    private void addDetailsToDataBase() {
+
+        Map<String, String> userMap = new HashMap<>();
+
+        userMap.put("item_barcode_number", barcodeRadio2.getText().toString());
+        userMap.put("item_name", itemNameRadio2.getText().toString());
+        userMap.put("item_cost", itemCostRadio2.getText().toString());
+        userMap.put("item_weight", itemWeightRadio2.getText().toString());
+
+        firebaseFirestore.collection("items_database")
+                .document(barcodeRadio2.getText().toString())
+                .set(userMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        Toast.makeText(BillingActivity.this, "Data Added Successfully", Toast.LENGTH_LONG);
+
+                        addNewItemDialog.dismiss();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
 
     }
 
