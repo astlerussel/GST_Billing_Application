@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         newBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                Intent intent = new Intent(MainActivity.this, BillingActivity.class);
                 startActivity(intent);
             }
         });

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="10dp"
+    app:cardBackgroundColor="@color/completeWhiteColor"
+    android:layout_marginTop="06dp"
+    android:layout_marginBottom="06dp"
+    android:layout_marginStart="06dp"
+    android:layout_marginEnd="06dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:background="@drawable/mrp_summary_card_view_shape"
+        >
+
+        <TextView
+            android:id="@+id/billing_item_ean_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EAN-13 Number"
+            android:layout_marginTop="06dp"
+            android:layout_marginBottom="06dp"
+            android:layout_marginStart="10dp"
+            />
+
+        <TextView
+            android:id="@+id/billing_item_name"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:text="Item Name"
+            android:textSize="13dp"
+            android:layout_marginTop="06dp"
+            android:layout_marginBottom="06dp"
+            android:layout_marginStart="10dp"
+            android:lines="2"
+            android:lineSpacingExtra="0.5dp"
+            android:layout_below="@+id/billing_item_ean_number"
+            />
+
+        <TextView
+            android:id="@+id/billing_item_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weight"
+            android:layout_below="@+id/billing_item_name"
+            android:layout_marginTop="06dp"
+            android:layout_marginBottom="06dp"
+            android:layout_marginStart="10dp"
+
+            />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/billing_item_weight"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="06dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price"
+                    android:layout_below="@+id/billing_item_weight"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="x"
+                    android:layout_marginStart="5dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="quantity"
+                    android:inputType="number"
+                    android:layout_marginStart="5dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="="
+                    android:layout_marginStart="5dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="total"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="2dp"
+                    />
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/billing_item_quantity_card_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="10dp"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="5dp"
+
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/quantity_card_view_shape"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="35dp"
+                    android:layout_height="38dp"
+                    android:text="-"
+                    android:textSize="15dp"
+                    android:textAlignment="center"
+                    android:textColor="#f0260f"
+                    />
+
+                <TextView
+                    android:layout_width="35dp"
+                    android:layout_height="38dp"
+                    android:text="3"
+                    android:textAlignment="center"
+                    android:textSize="13dp" />
+
+                <Button
+                    android:layout_width="35dp"
+                    android:layout_height="38dp"
+                    android:text="+"
+                    android:textSize="15dp"
+                    android:textAlignment="center"
+                    android:textColor="#49b675"
+                    />
+
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/billing_item_delete_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/billing_item_quantity_card_view"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="45dp"
+            android:background="@drawable/trash_icon"
+            />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
