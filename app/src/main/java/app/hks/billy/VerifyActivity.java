@@ -75,8 +75,11 @@ public class VerifyActivity extends AppCompatActivity {
     private void verifyCode(String code) {
         if(code == null){
             String input_code = editText.getText().toString().trim();
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, input_code);
-            signInWithCredential(credential);
+
+
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, input_code);
+                signInWithCredential(credential);
+
         }
         else{
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
@@ -98,6 +101,9 @@ public class VerifyActivity extends AppCompatActivity {
                             String phone = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
                             Map<String, String> userMap = new HashMap<>();
+                            userMap.put("company_name","");
+                            userMap.put("owners_name","");
+                            userMap.put("company_address","");
 
                             userMap.put("company_phone_number", phone);
                             userMap.put("uid", uid);
