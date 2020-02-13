@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         newBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAuth.signOut();
                 Intent intent = new Intent(MainActivity.this, BillingActivity.class);
                 startActivity(intent);
             }
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             startActivity(intent);
-        }/*else {
+        }else {
             String uid = mAuth.getCurrentUser().getUid();
             final DocumentReference documentReference = firebaseFirestore.collection("users").document(uid);
             documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
@@ -90,14 +91,14 @@ public class MainActivity extends AppCompatActivity {
                 public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
                     if (documentSnapshot.exists()) {
-                        String username = documentSnapshot.getString("name");
-                        //String age1 = documentSnapshot.getString("age");
-                        //String gender2 = documentSnapshot.getString("Gender");
-                        //String dob2 = documentSnapshot.getString("Date Of Birth");
+                        String company_name = documentSnapshot.getString("company_name");
+                        String owners_name = documentSnapshot.getString("owners_name");
+                        String company_address = documentSnapshot.getString("company_address");
+                        String company_mob = documentSnapshot.getString("company_phone_number");
                         //String nationality2 = documentSnapshot.getString("Nationality");
                         //||age1=="" || gender2=="" || nationality2==""|| dob2==""
 
-                        if (username == "") {
+                        if (company_name == "" || owners_name =="" || company_address == "" || company_mob == "") {
                             Intent intent1 = new Intent(MainActivity.this, DetailsActivity.class);
                             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent1);
@@ -111,28 +112,30 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-        }*/
+            //ADDING VALUES TO SELF INFORMATION CARD VIEW
+            selfInfoCardView = (CardView) findViewById(R.id.main_company_details_card_view);
+            tCompanyName = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_name);
+            tOwnerName = (TextView) selfInfoCardView.findViewById(R.id.cardview_owner_name);
+            tCompanyAddress = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_address);
+            tOwnerPhoneNUmber = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_phone_number);
+
+            DocumentReference docRef = firebaseFirestore.collection("users").document(userId);
+            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                    tCompanyName.setText(documentSnapshot.getString("company_name"));
+                    tOwnerName.setText(documentSnapshot.getString("owners_name"));
+                    tCompanyAddress.setText(documentSnapshot.getString("company_address"));
+                    tOwnerPhoneNUmber.setText(documentSnapshot.getString("company_phone_number"));
+
+                }
+            });
+
+        }
 
 
 
-        //ADDING VALUES TO SELF INFORMATION CARD VIEW
-        selfInfoCardView = (CardView) findViewById(R.id.main_company_details_card_view);
-        tCompanyName = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_name);
-        tOwnerName = (TextView) selfInfoCardView.findViewById(R.id.cardview_owner_name);
-        tCompanyAddress = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_address);
-        tOwnerPhoneNUmber = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_phone_number);
 
-        DocumentReference docRef = firebaseFirestore.collection("users").document(userId);
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                tCompanyName.setText(documentSnapshot.getString("company_name"));
-                tOwnerName.setText(documentSnapshot.getString("owners_name"));
-                tCompanyAddress.setText(documentSnapshot.getString("company_address"));
-                tOwnerPhoneNUmber.setText(documentSnapshot.getString("company_phone_number"));
-
-            }
-        });
 
     }
 }
