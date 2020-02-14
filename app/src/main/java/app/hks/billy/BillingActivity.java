@@ -48,6 +48,8 @@ import java.util.Map;
 public class BillingActivity extends AppCompatActivity {
     private RecyclerView findFriendRecyclerList;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static String invoNumber;
+
 
 
 
@@ -62,9 +64,9 @@ public class BillingActivity extends AppCompatActivity {
 
 
     private Dialog addNewItemDialog;
-    CollectionReference ItemsRef;
 
-    private Dialog addNewItemDialog, discardOptionsDialog;
+
+    private Dialog discardOptionsDialog;
 
 
     private int counter = 0;
@@ -81,6 +83,10 @@ public class BillingActivity extends AppCompatActivity {
     private Integer intInvoNumber;
     private String strInvoNumber, strCompanyName, strOwnerName, strInvioceCharCount;
     private Character strCharCompanyName, strCharOwnerName;
+    String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+    CollectionReference ItemsRef;
+
+
 
     private Button discardOPtionsYesButton, discardoptionsNoButton;
 
@@ -91,7 +97,9 @@ public class BillingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_billing);
         findFriendRecyclerList = (RecyclerView) findViewById(R.id.item_recycler_list);
         findFriendRecyclerList.setLayoutManager(new LinearLayoutManager(this));
-        setUpRecyclerView();
+
+
+
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         //userId = firebaseAuth.getCurrentUser().getUid();
@@ -99,13 +107,16 @@ public class BillingActivity extends AppCompatActivity {
         addNewItemButton = (Button) findViewById(R.id.billing_add_item_button);
         radioButton1 = (RadioButton) findViewById(R.id.enter_barcode_dialog_radio_button);
         radioButton2 = (RadioButton) findViewById(R.id.enter_details_dialog_radio_button);
-
-
-
-
-
-
         initializeSummaryCardViewFields();
+
+
+
+
+
+
+
+
+
 
 
 
@@ -314,11 +325,22 @@ public class BillingActivity extends AppCompatActivity {
         });
 
 
+
+
+
     }
 
     private void setUpRecyclerView() {
-        String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-        ItemsRef = db.collection("/users/"+uid+"/bills/AGH900000001/AGH900000001");
+
+
+
+
+
+
+
+        Toast.makeText(BillingActivity.this, invoNumber, Toast.LENGTH_LONG).show();
+
+
 
         Query query = ItemsRef;
 
@@ -581,7 +603,13 @@ public class BillingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
+        if(invoNumber==""){
+            Intent refresh = new Intent(this, BillingActivity.class);
+            startActivity(refresh);//Start the same Activity
+            finish();
+        }
+
+
 
         userId = firebaseAuth.getUid();
 
@@ -616,24 +644,45 @@ public class BillingActivity extends AppCompatActivity {
 
                     intInvoNumber = 1;
 
+
                     strInvoNumber = strInvioceCharCount+strCharCompanyName+strCharOwnerName+(900000000+intInvoNumber);
-                    Toast.makeText(BillingActivity.this, "Data: "+strInvoNumber, Toast.LENGTH_LONG).show();
+
+
+                    //Toast.makeText(BillingActivity.this, "Data: "+strInvoNumber, Toast.LENGTH_LONG).show();
                     invoice_number.setText(strInvoNumber);
 
 
                 }
                 else {
 
+
                     strInvoNumber = strInvioceCharCount+strCharCompanyName+strCharOwnerName+(900000000+intInvoNumber);
-                    Toast.makeText(BillingActivity.this, "Data: "+strInvoNumber, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(BillingActivity.this, "Data: "+strInvoNumber, Toast.LENGTH_LONG).show();
                     invoice_number.setText(strInvoNumber);
+                    invoNumber = invoice_number.getText().toString();
 
 
                 }
 
 
+
             }
+
         });
+
+
+        ItemsRef = db.collection("/users/"+uid+"/bills/"+invoNumber+"/"+invoNumber);
+        setUpRecyclerView();
+
+
+
+
+
+
+
+
+
+        adapter.startListening();
 
     }
 
