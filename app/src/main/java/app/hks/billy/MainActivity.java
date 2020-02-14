@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 Intent intent = new Intent(MainActivity.this, BillingActivity.class);
                 startActivity(intent);
             }
@@ -105,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intent1);
                         }
                     } else {
-                        Intent intent1 = new Intent(MainActivity.this, DetailsActivity.class);
+                        mAuth.signOut();
+                        Intent intent1 = new Intent(MainActivity.this, AuthActivity.class);
                         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent1);
                     }
