@@ -603,7 +603,7 @@ public class BillingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(invoNumber==""){
+        if(invoNumber==null){
             Intent refresh = new Intent(this, BillingActivity.class);
             startActivity(refresh);//Start the same Activity
             finish();
