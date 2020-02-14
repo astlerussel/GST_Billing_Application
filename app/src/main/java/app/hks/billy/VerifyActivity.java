@@ -1,6 +1,7 @@
 package app.hks.billy;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -19,7 +20,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +36,13 @@ public class VerifyActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText editText;
     private FirebaseFirestore firebaseFirestore;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
+
 
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -94,23 +101,14 @@ public class VerifyActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-                            String phonenumber = getIntent().getStringExtra("phonenumber");
+                            String phonenum = getIntent().getStringExtra("phonenumber");
                             //int num = Integer.parseInt(phonenumber);
+                            userId = FirebaseAuth.getInstance().getUid();
 
-                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            String phone = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+                            DocumentReference documentReference = firebaseFirestore.collection("users").document(userId);
 
-                            Map<String, String> userMap = new HashMap<>();
-                            userMap.put("company_name","");
-                            userMap.put("owners_name","");
-                            userMap.put("company_address","");
-
-                            userMap.put("company_phone_number", phone);
-                            userMap.put("uid", uid);
-
-                            firebaseFirestore.collection("users")
-                                    .document(uid)
-                                    .set(userMap)
+                            documentReference.update("company_phone_number", phonenum,
+                                    "uid", userId)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -127,11 +125,11 @@ public class VerifyActivity extends AppCompatActivity {
                                 }
                             });
 
-                            firebaseFirestore.collection("users")
-                                    .document(uid)
-                                    .collection("self_info")
-                                    .document(uid)
-                                    .set(userMap)
+
+                            DocumentReference docRef = firebaseFirestore.collection("users").document(userId).collection("self_info").document(userId);
+
+                            docRef.update("company_phone_number", phonenum,
+                                    "uid", userId)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -143,6 +141,10 @@ public class VerifyActivity extends AppCompatActivity {
 
                                 }
                             });
+
+                            //TO CHECK IF "INVOICE NUMBER" FIELD IS CREATE AND HAS SOME VALUE, IF NOT THEN CREATE THE FILED AND ADD "0000000000"
+                            checkInvoiceField();
+
 
                         } else {
                             Toast.makeText(VerifyActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -160,6 +162,64 @@ public class VerifyActivity extends AppCompatActivity {
                 TaskExecutors.MAIN_THREAD,
                 mCallBack
         );
+    }
+
+    private  void  checkInvoiceField()
+    {
+        final DocumentReference docRef = firebaseFirestore.collection("users").document(userId);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if(task.isSuccessful())
+                {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+
+                    if(documentSnapshot.exists())
+                    {
+                        if(documentSnapshot.get("invoice_number") != null)
+                        {
+                            //FIELD EXISTS
+
+                        }
+                        else
+                        {
+                            //FIELD DOESN'T EXISTS
+                            docRef.update("invoice_number", "0000000000")
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+
+                            DocumentReference docuRef = firebaseFirestore.collection("users").document(userId).collection("self_info").document(userId);
+
+                            docuRef.update("invoice_number", "0000000000",
+                            "invoice_char_count","A")
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+                        }
+                    }
+                }
+
+            }
+        });
+
     }
 
 

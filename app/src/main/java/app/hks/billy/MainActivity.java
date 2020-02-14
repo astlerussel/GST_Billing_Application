@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private TextView tCompanyName, tOwnerName, tCompanyAddress, tOwnerPhoneNUmber;
+    private Button tEditButoon;
 
     private FirebaseAuth mAuth;
 
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         newBillButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
+
                 Intent intent = new Intent(MainActivity.this, BillingActivity.class);
                 startActivity(intent);
             }
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
             tOwnerName = (TextView) selfInfoCardView.findViewById(R.id.cardview_owner_name);
             tCompanyAddress = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_address);
             tOwnerPhoneNUmber = (TextView) selfInfoCardView.findViewById(R.id.cardview_company_phone_number);
+            tEditButoon = (Button) selfInfoCardView.findViewById(R.id.cardview_edit_card_button);
 
             DocumentReference docRef = firebaseFirestore.collection("users").document(userId);
             docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -128,6 +130,15 @@ public class MainActivity extends AppCompatActivity {
                     tCompanyAddress.setText(documentSnapshot.getString("company_address"));
                     tOwnerPhoneNUmber.setText(documentSnapshot.getString("company_phone_number"));
 
+                }
+            });
+
+            tEditButoon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAuth.signOut();
+                    Intent intent = new Intent(MainActivity.this, AuthActivity.class);
+                    startActivity(intent);
                 }
             });
 

@@ -121,7 +121,7 @@ public class NameActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String uid = FirebaseAuth.getInstance().getUid();
 
         final DocumentReference documentReference = firebaseFirestore.collection("users").document(uid);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
