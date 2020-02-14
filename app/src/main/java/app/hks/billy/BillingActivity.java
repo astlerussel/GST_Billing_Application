@@ -66,7 +66,7 @@ public class BillingActivity extends AppCompatActivity {
     private Dialog addNewItemDialog;
 
 
-    private Dialog addNewItemDialog, discardOptionsDialog;
+    private Dialog discardOptionsDialog;
 
 
     private int counter = 0;
