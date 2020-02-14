@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             tEditButoon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAuth.signOut();
+
                     Intent intent = new Intent(MainActivity.this, AuthActivity.class);
                     startActivity(intent);
                 }
