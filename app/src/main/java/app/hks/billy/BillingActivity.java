@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,21 +39,33 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BillingActivity extends AppCompatActivity {
+    private RecyclerView findFriendRecyclerList;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+
 
     private Button addNewItemButton;
     private Button cancelItenDialogButton, addItemDialogButton;
     private EditText barcodeRadio1, barcodeRadio2, itemNameRadio2, itemWeightRadio2, itemCostRadio2;
 
     private RadioGroup radioGroup;
+    private BillingAdapter adapter;
     private RadioButton radioButton1, radioButton2;
 
+
+    private Dialog addNewItemDialog;
+    CollectionReference ItemsRef;
+
     private Dialog addNewItemDialog, discardOptionsDialog;
+
 
     private int counter = 0;
 
@@ -74,7 +89,9 @@ public class BillingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billing);
-
+        findFriendRecyclerList = (RecyclerView) findViewById(R.id.item_recycler_list);
+        findFriendRecyclerList.setLayoutManager(new LinearLayoutManager(this));
+        setUpRecyclerView();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         //userId = firebaseAuth.getCurrentUser().getUid();
@@ -82,6 +99,7 @@ public class BillingActivity extends AppCompatActivity {
         addNewItemButton = (Button) findViewById(R.id.billing_add_item_button);
         radioButton1 = (RadioButton) findViewById(R.id.enter_barcode_dialog_radio_button);
         radioButton2 = (RadioButton) findViewById(R.id.enter_details_dialog_radio_button);
+
 
 
 
@@ -295,6 +313,25 @@ public class BillingActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void setUpRecyclerView() {
+        String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ItemsRef = db.collection("/users/"+uid+"/bills/AGH900000001/AGH900000001");
+
+        Query query = ItemsRef;
+
+        FirestoreRecyclerOptions<ModelBillItems> options = new FirestoreRecyclerOptions.Builder<ModelBillItems>()
+                .setQuery(query, ModelBillItems.class)
+                .build();
+
+        adapter = new BillingAdapter(options);
+
+        RecyclerView recyclerView = findViewById(R.id.item_recycler_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
     private void deleteTheBillFromTheDatabase() {
@@ -544,8 +581,10 @@ public class BillingActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        adapter.startListening();
 
         userId = firebaseAuth.getUid();
+
 
         DocumentReference docRef = firebaseFirestore.collection("users").document(userId);
 
@@ -559,6 +598,7 @@ public class BillingActivity extends AppCompatActivity {
                 strCompanyName = documentSnapshot.getString("company_name");
                 strOwnerName = documentSnapshot.getString("owners_name");
                 strInvioceCharCount = documentSnapshot.getString("invoice_char_count");
+
 
                 strCharCompanyName = strCompanyName.toUpperCase().charAt(0);
                 strCharOwnerName = strOwnerName.toUpperCase().charAt(0);
@@ -580,6 +620,7 @@ public class BillingActivity extends AppCompatActivity {
                     Toast.makeText(BillingActivity.this, "Data: "+strInvoNumber, Toast.LENGTH_LONG).show();
                     invoice_number.setText(strInvoNumber);
 
+
                 }
                 else {
 
@@ -596,6 +637,11 @@ public class BillingActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
 
 }
 
