@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/completeWhiteColor"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        app:cardElevation="10dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Are Your Sure?"
+                    android:textAlignment="center"
+                    android:textSize="20dp"
+                    android:textColor="@color/blueBackground"
+                    android:textStyle="bold"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp">
+
+                    <Button
+                        android:id="@+id/discard_option_no_card_button"
+                        android:layout_width="89dp"
+                        android:layout_height="36dp"
+                        android:text="No"
+                        android:textColor="@color/completeWhiteColor"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:background="@drawable/reg_btn_style"
+                        android:layout_marginStart="30dp"
+                        />
+
+                    <Button
+                        android:id="@+id/discard_option_yes_card_button"
+                        android:layout_width="89dp"
+                        android:layout_height="36dp"
+                        android:text="Yes"
+                        android:textColor="@color/completeWhiteColor"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/reg_btn_style"
+                        android:layout_marginEnd="30dp"
+                        />
+
+                </RelativeLayout>
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

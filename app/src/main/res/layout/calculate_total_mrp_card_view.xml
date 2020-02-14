@@ -69,9 +69,14 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="9dp"
                         android:background="@drawable/discard_button_style"
+
                         android:text="DISCARD"
                         android:textColor="@color/completeWhiteColor"
                         android:textStyle="bold" />
+
+                        android:clickable="false"
+                        />
+
 
                 </RelativeLayout>
 
