@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,8 +36,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BillingActivity extends AppCompatActivity {
@@ -54,8 +60,12 @@ public class BillingActivity extends AppCompatActivity {
     private BillingAdapter adapter;
     private RadioButton radioButton1, radioButton2;
 
+
     private Dialog addNewItemDialog;
     CollectionReference ItemsRef;
+
+    private Dialog addNewItemDialog, discardOptionsDialog;
+
 
     private int counter = 0;
 
@@ -64,13 +74,15 @@ public class BillingActivity extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private String userId;
 
-    private CardView summaryCardView;
+    private CardView summaryCardView, discardBillCardView;
     private TextView invoice_number, total_cost_of_items, total_items_count;
     private Button discardButton, checkoutButton;
 
     private Integer intInvoNumber;
     private String strInvoNumber, strCompanyName, strOwnerName, strInvioceCharCount;
     private Character strCharCompanyName, strCharOwnerName;
+
+    private Button discardOPtionsYesButton, discardoptionsNoButton;
 
 
     @Override
@@ -94,6 +106,8 @@ public class BillingActivity extends AppCompatActivity {
 
 
         initializeSummaryCardViewFields();
+
+
 
 
         addNewItemButton.setOnClickListener(new View.OnClickListener() {
@@ -294,6 +308,7 @@ public class BillingActivity extends AppCompatActivity {
                 intent.putExtra("invoice_complete_number", strInvoNumber);
                 intent.putExtra("invoice_character", strInvioceCharCount);
                 intent.putExtra("invoice_number", intInvoNumber);
+                startActivity(intent);
 
             }
         });
@@ -319,6 +334,60 @@ public class BillingActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    private void deleteTheBillFromTheDatabase() {
+
+
+
+        CollectionReference coleref = firebaseFirestore.collection("users/"+userId+"/bills/"+strInvoNumber+"/"+strInvoNumber+"/");
+
+        coleref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                        DocumentReference docRef = firebaseFirestore.collection("users")
+                                .document(userId)
+                                .collection("bills")
+                                .document(strInvoNumber).collection(strInvoNumber).document(document.getId());
+
+
+                        docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                                Toast.makeText(BillingActivity.this,"Data Deleted", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(BillingActivity.this,strInvoNumber, Toast.LENGTH_LONG).show();
+                                //discardOptionsDialog.dismiss();
+                                Intent intent = new Intent(BillingActivity.this, MainActivity.class);
+                                startActivity(intent);
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                                String message = e.getMessage();
+                                Toast.makeText(BillingActivity.this, "Error: "+ message, Toast.LENGTH_LONG).show();
+
+                            }
+                        });
+                    }
+                    //Log.d(TAG, list.toString());
+                } else {
+                    //Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+
+            }
+        });
+
+
+
+
+    }
+
+
     private void initializeSummaryCardViewFields() {
 
         summaryCardView = (CardView) findViewById(R.id.summary_card_view);
@@ -328,6 +397,41 @@ public class BillingActivity extends AppCompatActivity {
 
         discardButton = (Button) summaryCardView.findViewById(R.id.summary_card_discard_button);
         checkoutButton = (Button) summaryCardView.findViewById(R.id.summary_card_checkout_button);
+
+        discardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                discardOptionsDialog = new Dialog(BillingActivity.this);
+
+                discardOptionsDialog.setContentView(R.layout.custom_on_disacrd_options_card_view_dialog);
+                discardOPtionsYesButton = (Button) discardOptionsDialog.findViewById(R.id.discard_option_yes_card_button);
+                discardoptionsNoButton = (Button) discardOptionsDialog.findViewById(R.id.discard_option_no_card_button);
+
+                discardOptionsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                discardOptionsDialog.show();
+
+                discardoptionsNoButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        discardOptionsDialog.dismiss();
+                    }
+                });
+
+
+                discardOPtionsYesButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        deleteTheBillFromTheDatabase();
+
+
+                    }
+                });
+
+
+            }
+        });
 
 
 
@@ -341,6 +445,8 @@ public class BillingActivity extends AppCompatActivity {
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+
 
                 Map<String, String> itemsMap = new HashMap<>();
 
@@ -388,8 +494,10 @@ public class BillingActivity extends AppCompatActivity {
                     }
                 });
 
-                CollectionReference colRef = firebaseFirestore.collection("users/"+userId+"/bills/"+strInvoNumber+"/"+strInvoNumber);
+                CollectionReference colRef = firebaseFirestore.collection("users")
+                        .document(userId).collection("bills").document(strInvoNumber).collection(strInvoNumber);
                 colRef.orderBy("counter");
+
 
             }
         });
@@ -528,11 +636,13 @@ public class BillingActivity extends AppCompatActivity {
         });
 
     }
+
     @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
     }
+
 }
 
 
