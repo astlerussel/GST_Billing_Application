@@ -72,6 +72,7 @@
                         android:layout_marginTop="9dp"
                         android:layout_marginStart="20dp"
                         android:background="@drawable/discard_button_style"
+                        android:clickable="false"
                         />
 
                 </RelativeLayout>
