@@ -83,6 +83,7 @@
                     android:layout_height="match_parent">
 
                     <Button
+                        android:id="@+id/cardview_edit_card_button"
                         android:layout_width="90dp"
                         android:layout_height="34dp"
                         android:text="Edit"

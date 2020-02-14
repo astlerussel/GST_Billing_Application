@@ -1,9 +1,12 @@
 package app.hks.billy;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,9 +25,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,9 +46,20 @@ public class BillingActivity extends AppCompatActivity {
 
     private Dialog addNewItemDialog;
 
+    private int counter = 0;
+
+
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String userId;
+
+    private CardView summaryCardView;
+    private TextView invoice_number, total_cost_of_items, total_items_count;
+    private Button discardButton, checkoutButton;
+
+    private Integer intInvoNumber;
+    private String strInvoNumber, strCompanyName, strOwnerName, strInvioceCharCount;
+    private Character strCharCompanyName, strCharOwnerName;
 
 
     @Override
@@ -58,6 +76,10 @@ public class BillingActivity extends AppCompatActivity {
         radioButton2 = (RadioButton) findViewById(R.id.enter_details_dialog_radio_button);
 
 
+
+
+
+        initializeSummaryCardViewFields();
 
 
         addNewItemButton.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +121,7 @@ public class BillingActivity extends AppCompatActivity {
                         int checkRadioInput = radioGroup.getCheckedRadioButtonId();
 
 
+                        //WHEN RADIO BUTTON 1 IS SELECTED
                         if(checkRadioInput == R.id.enter_barcode_dialog_radio_button)
                         {
                             //SETTING FIELDS FOR RADIO BUTTON 1
@@ -126,18 +149,58 @@ public class BillingActivity extends AppCompatActivity {
                                         barcodeRadio1.setError("Mandatory Field!!!");
                                         barcodeRadio1.requestFocus();
                                     }
-                                    if(!barcode1.isEmpty())
+                                    if(barcode1.length() != 13)
+                                    {
+                                        barcodeRadio1.setError("Invalid Input!!!");
+                                        barcodeRadio1.requestFocus();
+
+                                    }
+                                    if(!barcode1.isEmpty() && !(barcode1.length() != 13))
                                     {
                                         //FETCHING THE BARCODE DETAILS FROM DATABASE
-
-
                                         //CREATING A COLLECTION->DOCUMENT AND ADDING BARCODE DETAILS TO THAT
+
+                                        DocumentReference docRef = firebaseFirestore.collection("items_database").document(barcodeRadio1.getText().toString());
+                                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                                if(task.isSuccessful())
+                                                {
+                                                    DocumentSnapshot documentSnapshot = task.getResult();
+
+                                                    if(documentSnapshot.exists())
+                                                    {
+                                                        //Toast.makeText(BillingActivity.this, "Item Exists", Toast.LENGTH_LONG).show();
+
+                                                        String barcdeValue = barcodeRadio1.getText().toString();
+                                                        addItemToTheBill(barcdeValue);
+                                                        addNewItemDialog.dismiss();
+
+                                                    }
+                                                    else if(!documentSnapshot.exists())
+                                                    {
+
+                                                        barcodeRadio2.setError("Item doesn't Exists!!!");
+                                                        barcodeRadio2.requestFocus();
+                                                        Toast.makeText(BillingActivity.this, "Item Doesn't Exists!!!Please Select ENTER DETAILS Option.", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                                else
+                                                {
+
+                                                }
+
+                                            }
+                                        });
                                     }
 
                                 }
                             });
 
                         }
+
+                        //WHEN RADIO BUTTON 2 IS SELECTED
                         else if(checkRadioInput == R.id.enter_details_dialog_radio_button)
                         {
                             //SETTING FIELDS FOR RADIO BUTTON 1
@@ -194,22 +257,106 @@ public class BillingActivity extends AppCompatActivity {
                                         //FIRST CHECK WHETHER BARCODE EXISITS IN DATABASE OR NOT
                                         checkIfBarcodeAlreadyExistsInDatabase();
 
-                                        //ADDING DETAILS TO A NEW BARCODE DATABASE
-                                        //addDetailsToDataBase();
                                     }
-
 
                                 }
                             });
 
-
-
                         }
-
-
 
                     }
                 });
+
+            }
+        });
+
+
+
+        checkoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(BillingActivity.this, CheckoutActivity.class);
+                intent.putExtra("invoice_complete_number", strInvoNumber);
+                intent.putExtra("invoice_character", strInvioceCharCount);
+                intent.putExtra("invoice_number", intInvoNumber);
+
+            }
+        });
+
+    }
+
+    private void initializeSummaryCardViewFields() {
+
+        summaryCardView = (CardView) findViewById(R.id.summary_card_view);
+        invoice_number = (TextView) summaryCardView.findViewById(R.id.summary_card_invoice_number);
+        total_items_count = (TextView) summaryCardView.findViewById(R.id.summary_card_total_items);
+        total_cost_of_items = (TextView) summaryCardView.findViewById(R.id.summary_card_total_cost);
+
+        discardButton = (Button) summaryCardView.findViewById(R.id.summary_card_discard_button);
+        checkoutButton = (Button) summaryCardView.findViewById(R.id.summary_card_checkout_button);
+
+
+
+
+    }
+
+    private void addItemToTheBill(final String barcodeValue) {
+
+        DocumentReference docRef = firebaseFirestore.collection("items_database").document(barcodeValue);
+
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                Map<String, String> itemsMap = new HashMap<>();
+
+                itemsMap.put("item_barcode_number", documentSnapshot.getString("item_barcode_number"));
+                itemsMap.put("item_cost", documentSnapshot.getString("item_cost"));
+                itemsMap.put("item_name", documentSnapshot.getString("item_name"));
+                itemsMap.put("item_weight", documentSnapshot.getString("item_weight"));
+
+                firebaseFirestore.collection("users")
+                        .document(userId)
+                        .collection("bills")
+                        .document(strInvoNumber)
+                        .collection(strInvoNumber).document(barcodeValue)
+                        .set(itemsMap)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        String message = e.getMessage();
+                        Toast.makeText(BillingActivity.this, "Error: "+message, Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+
+                counter++;
+                DocumentReference docRef = firebaseFirestore.collection("users/"+userId+"/bills/"+strInvoNumber+"/"+strInvoNumber).document(barcodeValue);
+                docRef.update("counter", counter)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        String message = e.getMessage();
+                        Toast.makeText(BillingActivity.this, "Error: "+message, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                CollectionReference colRef = firebaseFirestore.collection("users/"+userId+"/bills/"+strInvoNumber+"/"+strInvoNumber);
+                colRef.orderBy("counter");
 
             }
         });
@@ -223,6 +370,8 @@ public class BillingActivity extends AppCompatActivity {
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                String barcodeValue = barcodeRadio2.getText().toString();
 
                 if(task.isSuccessful())
                 {
@@ -239,6 +388,10 @@ public class BillingActivity extends AppCompatActivity {
                     {
 
                         addDetailsToDataBase();
+
+                        //ADDING DETAILS TO A NEW BARCODE DATABASE
+                        //addDetailsToDataBase();
+                        addItemToTheBill(barcodeValue);
                     }
                 }
                 else
@@ -260,6 +413,7 @@ public class BillingActivity extends AppCompatActivity {
         userMap.put("item_name", itemNameRadio2.getText().toString());
         userMap.put("item_cost", itemCostRadio2.getText().toString());
         userMap.put("item_weight", itemWeightRadio2.getText().toString());
+        userMap.put("counter", "");
 
         firebaseFirestore.collection("items_database")
                 .document(barcodeRadio2.getText().toString())
@@ -282,4 +436,64 @@ public class BillingActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        userId = firebaseAuth.getUid();
+
+        DocumentReference docRef = firebaseFirestore.collection("users").document(userId);
+
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                //invoice_number.setText(documentSnapshot.getString("invoice_number"));
+
+                strInvoNumber = documentSnapshot.getString("invoice_number");
+                strCompanyName = documentSnapshot.getString("company_name");
+                strOwnerName = documentSnapshot.getString("owners_name");
+                strInvioceCharCount = documentSnapshot.getString("invoice_char_count");
+
+                strCharCompanyName = strCompanyName.toUpperCase().charAt(0);
+                strCharOwnerName = strOwnerName.toUpperCase().charAt(0);
+
+
+                intInvoNumber = Integer.parseInt(strInvoNumber);
+                intInvoNumber = intInvoNumber+1;
+
+                if(intInvoNumber > 999999999)
+                {
+                    char charInvoiceCharCount = strInvioceCharCount.toUpperCase().charAt(0);
+                    int intCount = charInvoiceCharCount+1;
+                    charInvoiceCharCount = (char)intCount;
+                    strInvioceCharCount = String.valueOf(charInvoiceCharCount);
+
+                    intInvoNumber = 1;
+
+                    strInvoNumber = strInvioceCharCount+strCharCompanyName+strCharOwnerName+(900000000+intInvoNumber);
+                    Toast.makeText(BillingActivity.this, "Data: "+strInvoNumber, Toast.LENGTH_LONG).show();
+                    invoice_number.setText(strInvoNumber);
+
+                }
+                else {
+
+                    strInvoNumber = strInvioceCharCount+strCharCompanyName+strCharOwnerName+(900000000+intInvoNumber);
+                    Toast.makeText(BillingActivity.this, "Data: "+strInvoNumber, Toast.LENGTH_LONG).show();
+                    invoice_number.setText(strInvoNumber);
+
+
+                }
+
+
+            }
+        });
+
+    }
 }
+
+
+
+
+
