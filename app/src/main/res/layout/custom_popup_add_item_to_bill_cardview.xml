@@ -181,6 +181,7 @@
                                     android:layout_marginTop="06dp"
                                     android:layout_marginBottom="06dp"
                                     android:visibility="gone"
+                                    android:inputType="number"
                                     />
                             </LinearLayout>
 

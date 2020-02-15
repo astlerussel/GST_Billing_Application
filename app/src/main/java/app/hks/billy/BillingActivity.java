@@ -87,8 +87,11 @@ public class BillingActivity extends AppCompatActivity {
     CollectionReference ItemsRef;
 
 
+    private int totalMrpSum;
+
 
     private Button discardOPtionsYesButton, discardoptionsNoButton;
+    private String barcodeValue;
 
 
     @Override
@@ -108,17 +111,7 @@ public class BillingActivity extends AppCompatActivity {
         radioButton1 = (RadioButton) findViewById(R.id.enter_barcode_dialog_radio_button);
         radioButton2 = (RadioButton) findViewById(R.id.enter_details_dialog_radio_button);
         initializeSummaryCardViewFields();
-
-
-
-
-
-
-
-
-
-
-
+        
 
 
         addNewItemButton.setOnClickListener(new View.OnClickListener() {
@@ -212,8 +205,9 @@ public class BillingActivity extends AppCompatActivity {
                                                     {
                                                         //Toast.makeText(BillingActivity.this, "Item Exists", Toast.LENGTH_LONG).show();
 
-                                                        String barcdeValue = barcodeRadio1.getText().toString();
-                                                        addItemToTheBill(barcdeValue);
+                                                        barcodeValue = barcodeRadio1.getText().toString();
+                                                        addItemToTheBill(barcodeValue);
+                                                        checkoutButton.setVisibility(View.VISIBLE);
                                                         addNewItemDialog.dismiss();
 
                                                     }
@@ -330,75 +324,62 @@ public class BillingActivity extends AppCompatActivity {
 
     }
 
-    private void setUpRecyclerView() {
 
-
-
-
-
-
-
-        Toast.makeText(BillingActivity.this, invoNumber, Toast.LENGTH_LONG).show();
-
-
-
-        Query query = ItemsRef;
-
-        FirestoreRecyclerOptions<ModelBillItems> options = new FirestoreRecyclerOptions.Builder<ModelBillItems>()
-                .setQuery(query, ModelBillItems.class)
-                .build();
-
-        adapter = new BillingAdapter(options);
-
-        RecyclerView recyclerView = findViewById(R.id.item_recycler_list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-    }
 
     private void deleteTheBillFromTheDatabase() {
 
 
-
-        CollectionReference coleref = firebaseFirestore.collection("users/"+userId+"/bills/"+strInvoNumber+"/"+strInvoNumber+"/");
+        CollectionReference coleref = firebaseFirestore.collection("users/"+userId+"/bills/"+invoNumber+"/"+invoNumber+"/");
 
         coleref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
 
-                        DocumentReference docRef = firebaseFirestore.collection("users")
-                                .document(userId)
-                                .collection("bills")
-                                .document(strInvoNumber).collection(strInvoNumber).document(document.getId());
+                    QuerySnapshot querySnapshot = task.getResult();
+
+                    if(querySnapshot.isEmpty())
+                    {
+                        BillingActivity.super.onBackPressed();
+                    }
+                    else
+                    {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+
+                            DocumentReference docRef = firebaseFirestore.collection("users")
+                                    .document(userId)
+                                    .collection("bills")
+                                    .document(strInvoNumber).collection(strInvoNumber).document(document.getId());
 
 
-                        docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
+                            docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
 
-                                Toast.makeText(BillingActivity.this,"Data Deleted", Toast.LENGTH_LONG).show();
-                                //Toast.makeText(BillingActivity.this,strInvoNumber, Toast.LENGTH_LONG).show();
-                                //discardOptionsDialog.dismiss();
-                                Intent intent = new Intent(BillingActivity.this, MainActivity.class);
-                                startActivity(intent);
+                                    Toast.makeText(BillingActivity.this,"Data Deleted", Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(BillingActivity.this,strInvoNumber, Toast.LENGTH_LONG).show();
+                                    //discardOptionsDialog.dismiss();
+                                    BillingActivity.super.onBackPressed();
+                                    Intent intent = new Intent(BillingActivity.this, MainActivity.class);
+                                    startActivity(intent);
 
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
 
-                                String message = e.getMessage();
-                                Toast.makeText(BillingActivity.this, "Error: "+ message, Toast.LENGTH_LONG).show();
+                                    String message = e.getMessage();
+                                    Toast.makeText(BillingActivity.this, "Error: "+ message, Toast.LENGTH_LONG).show();
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
                     //Log.d(TAG, list.toString());
                 } else {
                     //Log.d(TAG, "Error getting documents: ", task.getException());
+                    Toast.makeText(BillingActivity.this, "Error: "+ task.getException().toString(), Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -441,12 +422,13 @@ public class BillingActivity extends AppCompatActivity {
                 });
 
 
+
                 discardOPtionsYesButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        deleteTheBillFromTheDatabase();
 
+                        deleteTheBillFromTheDatabase();
 
                     }
                 });
@@ -454,6 +436,27 @@ public class BillingActivity extends AppCompatActivity {
 
             }
         });
+
+        //LISTEN TO REALTIME UPDATES FOR BILL ITEMS TO UPDATE THE MRP EVERY TIME
+        listenToRealTimeUpdatesToUpdateTheTotalMrp();
+
+
+
+
+
+    }
+
+    private void listenToRealTimeUpdatesToUpdateTheTotalMrp() {
+
+
+        /*firebaseFirestore.collection("users/"+userId+"/bills").document(invoNumber)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        total_cost_of_items.setText(documentSnapshot.getString("total_mrp_sum"));
+
+                    }
+                });*/
 
 
 
@@ -468,7 +471,7 @@ public class BillingActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
-
+                String item_cost = documentSnapshot.getString("item_cost");
 
                 Map<String, String> itemsMap = new HashMap<>();
 
@@ -476,6 +479,8 @@ public class BillingActivity extends AppCompatActivity {
                 itemsMap.put("item_cost", documentSnapshot.getString("item_cost"));
                 itemsMap.put("item_name", documentSnapshot.getString("item_name"));
                 itemsMap.put("item_weight", documentSnapshot.getString("item_weight"));
+                itemsMap.put("item_quantity", documentSnapshot.getString("item_quantity"));
+                itemsMap.put("invoice_number", strInvoNumber);
 
                 firebaseFirestore.collection("users")
                         .document(userId)
@@ -486,6 +491,13 @@ public class BillingActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+
+                                /*DocumentReference docRef = firebaseFirestore.collection("users")
+                                        .document(userId)
+                                        .collection("bills")
+                                        .document(invoNumber)ne
+                                        .update("total_mrp_sum", )*/
+
 
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -505,6 +517,8 @@ public class BillingActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+
+                                checkoutButton.setVisibility(View.VISIBLE);
 
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -577,6 +591,7 @@ public class BillingActivity extends AppCompatActivity {
         userMap.put("item_cost", itemCostRadio2.getText().toString());
         userMap.put("item_weight", itemWeightRadio2.getText().toString());
         userMap.put("counter", "");
+        userMap.put("item_quantity","1");
 
         firebaseFirestore.collection("items_database")
                 .document(barcodeRadio2.getText().toString())
@@ -597,6 +612,28 @@ public class BillingActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setUpRecyclerView() {
+
+
+        Toast.makeText(BillingActivity.this, invoNumber, Toast.LENGTH_LONG).show();
+
+
+
+        ItemsRef = db.collection("/users/"+uid+"/bills/"+invoNumber+"/"+invoNumber);
+        Query query = ItemsRef;
+
+        FirestoreRecyclerOptions<ModelBillItems> options = new FirestoreRecyclerOptions.Builder<ModelBillItems>()
+                .setQuery(query, ModelBillItems.class)
+                .build();
+
+        adapter = new BillingAdapter(options);
+
+        RecyclerView recyclerView = findViewById(R.id.item_recycler_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
 
@@ -645,7 +682,7 @@ public class BillingActivity extends AppCompatActivity {
                     intInvoNumber = 1;
 
 
-                    strInvoNumber = strInvioceCharCount+strCharCompanyName+strCharOwnerName+(900000000+intInvoNumber);
+                    strInvoNumber = strInvioceCharCount+strCharCompanyName+strCharOwnerName+(100000000+intInvoNumber);
 
 
                     //Toast.makeText(BillingActivity.this, "Data: "+strInvoNumber, Toast.LENGTH_LONG).show();
@@ -656,10 +693,12 @@ public class BillingActivity extends AppCompatActivity {
                 else {
 
 
-                    strInvoNumber = strInvioceCharCount+strCharCompanyName+strCharOwnerName+(900000000+intInvoNumber);
+                    strInvoNumber = strInvioceCharCount+strCharCompanyName+strCharOwnerName+(100000000+intInvoNumber);
                     // Toast.makeText(BillingActivity.this, "Data: "+strInvoNumber, Toast.LENGTH_LONG).show();
                     invoice_number.setText(strInvoNumber);
                     invoNumber = invoice_number.getText().toString();
+
+                    Toast.makeText(BillingActivity.this, "Invo: "+invoNumber, Toast.LENGTH_LONG).show();
 
 
                 }
@@ -671,18 +710,47 @@ public class BillingActivity extends AppCompatActivity {
         });
 
 
-        ItemsRef = db.collection("/users/"+uid+"/bills/"+invoNumber+"/"+invoNumber);
         setUpRecyclerView();
 
-
-
-
-
-
-
-
+        checkoutButtonStateEditor();
 
         adapter.startListening();
+
+    }
+
+    private void checkoutButtonStateEditor() {
+
+        CollectionReference coleref = firebaseFirestore.collection("users/"+userId+"/bills/"+invoNumber+"/"+invoNumber+"/");
+
+        coleref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                if (task.isSuccessful()) {
+
+                    QuerySnapshot querySnapshot = task.getResult();
+
+                    if(querySnapshot.isEmpty())
+                    {
+                        checkoutButton.setVisibility(View.INVISIBLE);
+                    }
+                    else
+                    {
+                        //checkoutButton.setVisibility(View.VISIBLE);
+                    }
+
+                } else {
+                    //Log.d(TAG, "Error getting documents: ", task.getException());
+                    //Toast.makeText(BillingActivity.this, "Error: "+ task.getException().toString(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+
+
+
+
 
     }
 
@@ -692,6 +760,101 @@ public class BillingActivity extends AppCompatActivity {
         adapter.stopListening();
     }
 
+    @Override
+    public void onBackPressed() {
+
+
+        discardOptionsDialog = new Dialog(BillingActivity.this);
+
+        discardOptionsDialog.setContentView(R.layout.custom_on_disacrd_options_card_view_dialog);
+        discardOPtionsYesButton = (Button) discardOptionsDialog.findViewById(R.id.discard_option_yes_card_button);
+        discardoptionsNoButton = (Button) discardOptionsDialog.findViewById(R.id.discard_option_no_card_button);
+
+        discardOptionsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        discardOptionsDialog.show();
+
+        discardoptionsNoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                discardOptionsDialog.dismiss();
+            }
+        });
+
+
+        discardOPtionsYesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                deleteTheBillFromTheDatabase();
+
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+
+
+        CollectionReference coleref = firebaseFirestore.collection("users/"+userId+"/bills/"+invoNumber+"/"+invoNumber+"/");
+
+
+        coleref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                if (task.isSuccessful()) {
+
+                    QuerySnapshot querySnapshot = task.getResult();
+
+                    if(querySnapshot.isEmpty())
+                    {
+
+                    }
+                    else
+                    {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+
+                            DocumentReference docRef = firebaseFirestore.collection("users")
+                                    .document(userId)
+                                    .collection("bills")
+                                    .document(strInvoNumber).collection(strInvoNumber).document(document.getId());
+
+
+                            docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                    Toast.makeText(BillingActivity.this,"Data Deleted", Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(BillingActivity.this,strInvoNumber, Toast.LENGTH_LONG).show();
+                                    //discardOptionsDialog.dismiss();
+                                    checkoutButton.setVisibility(View.INVISIBLE);
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                    String message = e.getMessage();
+                                    Toast.makeText(BillingActivity.this, "Error: "+ message, Toast.LENGTH_LONG).show();
+
+                                }
+                            });
+                        }
+                    }
+                    //Log.d(TAG, list.toString());
+                } else {
+                    //Log.d(TAG, "Error getting documents: ", task.getException());
+                    Toast.makeText(BillingActivity.this, "Error: "+ task.getException().toString(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+
+        super.onDestroy();
+    }
 }
 
 
