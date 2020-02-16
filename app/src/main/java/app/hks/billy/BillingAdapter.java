@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -99,13 +101,13 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
                 @Override
                 public void onClick(View v) {
                     int quantity = Integer.parseInt(itemQuantity.getText().toString());
-                    int cost = Integer.parseInt(itemCost.getText().toString());
+                    final int cost = Integer.parseInt(itemCost.getText().toString());
                     int total_cost;
 
                     quantity++;
 
                     String strQuantity;
-                    String invNum = String.valueOf(invoiceNumber.getText());
+                    final String invNum = String.valueOf(invoiceNumber.getText());
                     String eanNUm = String.valueOf(itemNumber.getText());
 
                     itemQuantity.setText(String.valueOf(quantity));
@@ -123,6 +125,51 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
                                 @Override
                                 public void onSuccess(Void aVoid) {
 
+                                    firebaseFirestore.collection("users/"+userId+"/bills").document(invNum)
+                                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                            if (task.isSuccessful())
+                                            {
+
+                                                DocumentSnapshot documentSnapshot = task.getResult();
+
+                                                if(documentSnapshot.exists())
+                                                {
+                                                    String strTotalMrp = documentSnapshot.getString("total_items_mrp");
+                                                    int intTotalMrp = Integer.parseInt(strTotalMrp);
+                                                    intTotalMrp = intTotalMrp+cost;
+                                                    strTotalMrp = String.valueOf(intTotalMrp);
+
+                                                    firebaseFirestore.collection("users/"+userId+"/bills").document(invNum)
+                                                            .update("total_items_mrp", strTotalMrp)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+
+                                                                    //PROGRESS BAR TO BE ADDED HERE
+
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+
+                                                        }
+                                                    });
+                                                }
+
+                                            }
+                                            else
+                                            {
+
+                                            }
+
+                                        }
+                                    });
+
+
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -132,13 +179,7 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
                         }
                     });
 
-                    intTotalMrpSum = intTotalMrpSum+cost;
-                    strTotalMrpSum = String.valueOf(intTotalMrpSum);
 
-
-                    DocumentReference docuRef = firebaseFirestore.collection("users/"+userId+"/bills/").document(invNum);
-
-                    docuRef.update("total_mrp_sum",strTotalMrpSum);
 
                 }
             });
@@ -148,7 +189,7 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
                 public void onClick(View v) {
 
                     int quantity = Integer.parseInt(itemQuantity.getText().toString());
-                    int cost = Integer.parseInt(itemCost.getText().toString());
+                    final int cost = Integer.parseInt(itemCost.getText().toString());
                     int total_cost;
                     quantity--;
 
@@ -189,7 +230,7 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
                     else {
 
                         String strQuantity;
-                        String invNum = String.valueOf(invoiceNumber.getText());
+                        final String invNum = String.valueOf(invoiceNumber.getText());
                         String eanNUm = String.valueOf(itemNumber.getText());
 
 
@@ -207,6 +248,52 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+
+                                        firebaseFirestore.collection("users/"+userId+"/bills").document(invNum)
+                                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                                if (task.isSuccessful())
+                                                {
+
+                                                    DocumentSnapshot documentSnapshot = task.getResult();
+
+                                                    if(documentSnapshot.exists())
+                                                    {
+                                                        String strTotalMrp = documentSnapshot.getString("total_items_mrp");
+                                                        int intTotalMrp = Integer.parseInt(strTotalMrp);
+                                                        intTotalMrp = intTotalMrp-cost;
+                                                        strTotalMrp = String.valueOf(intTotalMrp);
+
+                                                        firebaseFirestore.collection("users/"+userId+"/bills").document(invNum)
+                                                                .update("total_items_mrp", strTotalMrp)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+
+                                                                        //PROGRESS BAR TO BE ADDED HERE
+
+                                                                    }
+                                                                }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+
+                                                            }
+                                                        });
+                                                    }
+
+                                                }
+                                                else
+                                                {
+
+                                                }
+
+                                            }
+                                        });
+
+
+
 
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {

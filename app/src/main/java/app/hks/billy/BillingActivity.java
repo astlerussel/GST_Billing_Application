@@ -54,7 +54,7 @@ public class BillingActivity extends AppCompatActivity {
 
 
 
-    private Button addNewItemButton;
+    private Button addNewItemButton, addNewItemCardButton;
     private Button cancelItenDialogButton, addItemDialogButton;
     private EditText barcodeRadio1, barcodeRadio2, itemNameRadio2, itemWeightRadio2, itemCostRadio2;
 
@@ -110,6 +110,10 @@ public class BillingActivity extends AppCompatActivity {
         addNewItemButton = (Button) findViewById(R.id.billing_add_item_button);
         radioButton1 = (RadioButton) findViewById(R.id.enter_barcode_dialog_radio_button);
         radioButton2 = (RadioButton) findViewById(R.id.enter_details_dialog_radio_button);
+
+
+
+
         initializeSummaryCardViewFields();
         
 
@@ -127,13 +131,15 @@ public class BillingActivity extends AppCompatActivity {
                 itemWeightRadio2 = (EditText) addNewItemDialog.findViewById(R.id.enter_item_weight_edit_text_radio2);
                 itemCostRadio2 = (EditText) addNewItemDialog.findViewById(R.id.enter_item_cost_edit_text_radio2);
                 cancelItenDialogButton = (Button) addNewItemDialog.findViewById(R.id.cancel_item_card_button);
-                addNewItemButton = (Button) addNewItemDialog.findViewById(R.id.add_item_card_button);
+                addNewItemCardButton = (Button) addNewItemDialog.findViewById(R.id.add_item_card_button);
 
                 radioGroup = (RadioGroup) addNewItemDialog.findViewById(R.id.radio_group);
 
 
                 addNewItemDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 addNewItemDialog.show();
+
+
 
                 cancelItenDialogButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -165,11 +171,11 @@ public class BillingActivity extends AppCompatActivity {
                             itemWeightRadio2.setVisibility(View.GONE);
                             itemCostRadio2.setVisibility(View.GONE);
 
-                            addNewItemButton.setVisibility(View.VISIBLE);
+                            addNewItemCardButton.setVisibility(View.VISIBLE);
 
                             Toast.makeText(BillingActivity.this, "ID : "+ checkRadioInput, Toast.LENGTH_LONG);
 
-                            addNewItemButton.setOnClickListener(new View.OnClickListener() {
+                            addNewItemCardButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
 
@@ -245,12 +251,12 @@ public class BillingActivity extends AppCompatActivity {
                             itemWeightRadio2.setVisibility(View.VISIBLE);
                             itemCostRadio2.setVisibility(View.VISIBLE);
 
-                            addNewItemButton.setVisibility(View.VISIBLE);
+                            addNewItemCardButton.setVisibility(View.VISIBLE);
 
                             Toast.makeText(BillingActivity.this, "ID : "+checkRadioInput, Toast.LENGTH_LONG);
 
 
-                            addNewItemButton.setOnClickListener(new View.OnClickListener() {
+                            addNewItemCardButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
 
@@ -321,8 +327,45 @@ public class BillingActivity extends AppCompatActivity {
 
 
 
+        //UPDATING SUMMARY TOTAL COST FIELD
+        /*firebaseFirestore.collection("users/"+userId+"/bills").document(invoNumber)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable final DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                        firebaseFirestore.collection("users/"+userId+"/bills").document(invoNumber)
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                if(task.isSuccessful())
+                                {
+                                    DocumentSnapshot document = task.getResult();
+
+                                    if(document.exists())
+                                    {
+                                        total_cost_of_items.setText(document.getString("total_items_mrp"));
+
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                        });
+
+
+                    }
+                });*/
+
 
     }
+
 
 
 
@@ -375,6 +418,20 @@ public class BillingActivity extends AppCompatActivity {
                                 }
                             });
                         }
+
+                        firebaseFirestore.collection("users/"+userId+"/bills").document(invoNumber)
+                                .update("total_items_mrp", "0")
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
                     }
                     //Log.d(TAG, list.toString());
                 } else {
@@ -437,31 +494,11 @@ public class BillingActivity extends AppCompatActivity {
             }
         });
 
-        //LISTEN TO REALTIME UPDATES FOR BILL ITEMS TO UPDATE THE MRP EVERY TIME
-        listenToRealTimeUpdatesToUpdateTheTotalMrp();
-
-
-
 
 
     }
 
-    private void listenToRealTimeUpdatesToUpdateTheTotalMrp() {
 
-
-        /*firebaseFirestore.collection("users/"+userId+"/bills").document(invoNumber)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        total_cost_of_items.setText(documentSnapshot.getString("total_mrp_sum"));
-
-                    }
-                });*/
-
-
-
-
-    }
 
     private void addItemToTheBill(final String barcodeValue) {
 
@@ -469,7 +506,7 @@ public class BillingActivity extends AppCompatActivity {
 
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+            public void onEvent(@Nullable final DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
                 String item_cost = documentSnapshot.getString("item_cost");
 
@@ -533,6 +570,48 @@ public class BillingActivity extends AppCompatActivity {
                 CollectionReference colRef = firebaseFirestore.collection("users")
                         .document(userId).collection("bills").document(strInvoNumber).collection(strInvoNumber);
                 colRef.orderBy("counter");
+
+
+                //UPDATE THE TOTAL MRP FOR SUMMARY CARD
+                String strItemCost = documentSnapshot.getString("item_cost");
+                final int  intItemCost = Integer.parseInt(strItemCost);
+
+                DocumentReference docMrpRef = firebaseFirestore.collection("users/"+userId+"/bills").document(strInvoNumber);
+                docMrpRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentMrpSnapshot) {
+
+                        String strTotalMrp = documentMrpSnapshot.getString("total_items_mrp");
+                        int intTotalMrp = Integer.parseInt(strTotalMrp);
+
+                        intTotalMrp = intTotalMrp+intItemCost;
+
+                        strTotalMrp = String.valueOf(intTotalMrp);
+
+                        firebaseFirestore.collection("users/"+userId+"/bills")
+                                .document(strInvoNumber)
+                                .update("total_items_mrp",strTotalMrp)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
 
 
             }
@@ -710,6 +789,9 @@ public class BillingActivity extends AppCompatActivity {
         });
 
 
+
+
+
         setUpRecyclerView();
 
         checkoutButtonStateEditor();
@@ -786,6 +868,7 @@ public class BillingActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 deleteTheBillFromTheDatabase();
+                discardOptionsDialog.dismiss();
 
             }
         });
@@ -842,6 +925,24 @@ public class BillingActivity extends AppCompatActivity {
                                 }
                             });
                         }
+
+
+                        firebaseFirestore.collection("users")
+                                .document(userId)
+                                .collection("bills")
+                                .document(invoNumber)
+                                .update("total_items_mrp","0")
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
                     }
                     //Log.d(TAG, list.toString());
                 } else {
