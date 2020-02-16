@@ -1,5 +1,6 @@
 package app.hks.billy;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,6 +15,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.sql.BatchUpdateException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -63,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                createTotalMrpFieldInTheBill();
+
                 Intent intent = new Intent(MainActivity.this, BillingActivity.class);
                 startActivity(intent);
             }
@@ -72,6 +81,80 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    private void createTotalMrpFieldInTheBill()
+    {
+        DocumentReference doRef = firebaseFirestore.collection("users").document(userId);
+
+        doRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                String strCompanyName = documentSnapshot.getString("company_name");
+                String strOwnerName = documentSnapshot.getString("owners_name");
+                String strInvoCharCount = documentSnapshot.getString("invoice_char_count");
+                String strInvoiceNumber =documentSnapshot.getString("invoice_number");
+
+                Integer intInvoiceNumber = Integer.parseInt(strInvoiceNumber);
+                Character charCompanyName = strCompanyName.toUpperCase().charAt(0);
+                Character charOwnerName = strOwnerName.toUpperCase().charAt(0);
+                String finalInvoiceNumber;
+
+
+                intInvoiceNumber = intInvoiceNumber+1;
+
+                if(intInvoiceNumber > 999999999)
+                {
+                    char charInvoiceCharCount = strInvoCharCount.toUpperCase().charAt(0);
+                    int intCount = charInvoiceCharCount+1;
+                    charInvoiceCharCount = (char) intCount;
+
+                    intInvoiceNumber = 1;
+                    strInvoiceNumber = String.valueOf(100000000+intInvoiceNumber);
+
+                    finalInvoiceNumber = charInvoiceCharCount+charCompanyName+charOwnerName+(strInvoiceNumber);
+
+
+                }
+                else
+                {
+                    char charInvoiceCharCount = strInvoCharCount.toUpperCase().charAt(0);
+                    strInvoiceNumber = String.valueOf(100000000+intInvoiceNumber);
+
+                    finalInvoiceNumber = strInvoCharCount+charCompanyName+charOwnerName+strInvoiceNumber;
+
+                }
+
+
+                Map<String, String> totalMrpMao  =new HashMap<>();
+                totalMrpMao.put("total_items_mrp", "0");
+
+                DocumentReference documentReference = firebaseFirestore.collection("users/"+userId+"/bills").document(finalInvoiceNumber);
+
+                documentReference.set(totalMrpMao)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                                //Toast.makeText(MainActivity.this, "DataADDED",Toast.LENGTH_LONG).show();
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        String message = e.getMessage();
+
+                        Toast.makeText(MainActivity.this, "Error: "+message,Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+
+            }
+        });
+
+
+    }
 
 
 
