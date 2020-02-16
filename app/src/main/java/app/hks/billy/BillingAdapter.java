@@ -101,6 +101,7 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
                 @Override
                 public void onClick(View v) {
                     int quantity = Integer.parseInt(itemQuantity.getText().toString());
+
                     final int cost = Integer.parseInt(itemCost.getText().toString());
                     int total_cost;
 
@@ -157,6 +158,25 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
 
                                                         }
                                                     });
+                                                    String strTotalItems = documentSnapshot.getString("total_items_count");
+                                                    int intTotalItems = Integer.parseInt(strTotalItems);
+                                                    intTotalItems++;
+                                                    strTotalItems=String.valueOf(intTotalItems);
+                                                    firebaseFirestore.collection("users/"+userId+"/bills")
+                                                            .document(invNum)
+                                                            .update("total_items_count",strTotalItems)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+
+                                                        }
+                                                    });
+
                                                 }
 
                                             }
@@ -178,6 +198,9 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
                             String message = e.getMessage();
                         }
                     });
+
+
+
 
 
 
@@ -281,6 +304,26 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
 
                                                             }
                                                         });
+
+                                                        String strTotalItems = documentSnapshot.getString("total_items_count");
+                                                        int intTotalItems = Integer.parseInt(strTotalItems);
+                                                        intTotalItems--;
+                                                        strTotalItems=String.valueOf(intTotalItems);
+                                                        firebaseFirestore.collection("users/"+userId+"/bills")
+                                                                .document(invNum)
+                                                                .update("total_items_count",strTotalItems)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+
+                                                                    }
+                                                                }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+
+                                                            }
+                                                        });
+
                                                     }
 
                                                 }

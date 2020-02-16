@@ -60,6 +60,7 @@ public class BillingActivity extends AppCompatActivity {
 
     private RadioGroup radioGroup;
     private BillingAdapter adapter;
+    private int count=0;
     private RadioButton radioButton1, radioButton2;
 
 
@@ -103,6 +104,7 @@ public class BillingActivity extends AppCompatActivity {
 
 
 
+
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         //userId = firebaseAuth.getCurrentUser().getUid();
@@ -115,6 +117,16 @@ public class BillingActivity extends AppCompatActivity {
 
 
         initializeSummaryCardViewFields();
+
+
+
+
+
+
+
+
+
+
         
 
 
@@ -432,6 +444,19 @@ public class BillingActivity extends AppCompatActivity {
 
                             }
                         });
+                        firebaseFirestore.collection("users/"+userId+"/bills").document(invoNumber)
+                                .update("total_items_count", "0")
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
                     }
                     //Log.d(TAG, list.toString());
                 } else {
@@ -582,15 +607,35 @@ public class BillingActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentMrpSnapshot) {
 
                         String strTotalMrp = documentMrpSnapshot.getString("total_items_mrp");
+
                         int intTotalMrp = Integer.parseInt(strTotalMrp);
 
                         intTotalMrp = intTotalMrp+intItemCost;
 
                         strTotalMrp = String.valueOf(intTotalMrp);
 
+
                         firebaseFirestore.collection("users/"+userId+"/bills")
                                 .document(strInvoNumber)
                                 .update("total_items_mrp",strTotalMrp)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+                        String strTotalItems = documentMrpSnapshot.getString("total_items_count");
+                        int intTotalItems = Integer.parseInt(strTotalItems);
+                        intTotalItems++;
+                        strTotalItems=String.valueOf(intTotalItems);
+                        firebaseFirestore.collection("users/"+userId+"/bills")
+                                .document(strInvoNumber)
+                                .update("total_items_count",strTotalItems)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -713,6 +758,12 @@ public class BillingActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+
+
+
+
+
     }
 
 
@@ -781,6 +832,49 @@ public class BillingActivity extends AppCompatActivity {
 
 
                 }
+                DocumentReference totalItemRef = firebaseFirestore.collection("/users/"+userId+"/bills").document(strInvoNumber);
+
+                totalItemRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                        //invoice_number.setText(documentSnapshot.getString("invoice_number"));
+                        total_cost_of_items.setText(documentSnapshot.getString("total_items_mrp"));
+
+
+
+
+
+
+
+
+
+                    }
+
+                });
+
+
+                DocumentReference totalItemcountRef = firebaseFirestore.collection("/users/"+userId+"/bills").document(strInvoNumber);
+
+                totalItemcountRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                        //invoice_number.setText(documentSnapshot.getString("invoice_number"));
+
+                        total_items_count.setText(documentSnapshot.getString("total_items_count"));
+
+
+
+
+
+
+
+
+
+                    }
+
+                });
 
 
 
@@ -792,11 +886,16 @@ public class BillingActivity extends AppCompatActivity {
 
 
 
+
+
         setUpRecyclerView();
+        adapter.startListening();
+
+
 
         checkoutButtonStateEditor();
 
-        adapter.startListening();
+
 
     }
 
