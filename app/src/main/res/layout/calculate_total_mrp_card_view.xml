@@ -58,7 +58,8 @@
                         android:background="@drawable/checkout_edittext_style"
                         android:text="Checkout"
                         android:textColor="@color/completeWhiteColor"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="invisible"/>
 
                     <Button
                         android:id="@+id/summary_card_discard_button"
