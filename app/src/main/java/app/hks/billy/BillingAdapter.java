@@ -394,7 +394,7 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
 
                                         int intTotalItemsCount = Integer.parseInt(strTotalItemsCount);
 
-                                        intTotalItemsCount = intTotalItemsCount-intItemQuantity;
+                                        intTotalItemsCount = intTotalItemsCount-(intItemQuantity);
                                         strTotalItemsCount = String.valueOf(intTotalItemsCount);
 
                                         int intTotalItemsMrp = Integer.parseInt(strTotalItemsMrp);
