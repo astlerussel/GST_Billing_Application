@@ -8,8 +8,8 @@
     app:cardCornerRadius="6dp"
     app:cardElevation="5dp"
     app:cardBackgroundColor="@color/completeWhiteColor"
-    android:layout_marginTop="06dp"
-    android:layout_marginBottom="06dp"
+    android:layout_marginTop="03dp"
+    android:layout_marginBottom="03dp"
     android:layout_marginStart="06dp"
     android:layout_marginEnd="06dp"
     >
@@ -29,6 +29,8 @@
             android:layout_marginTop="06dp"
             android:layout_marginBottom="06dp"
             android:layout_marginStart="10dp"
+            android:textSize="15dp"
+            android:textColor="#000000"
             />
 
         <TextView
@@ -45,7 +47,9 @@
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:text="Item Name"
-            android:textSize="13dp"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:textColor="#3464dc"
             android:layout_marginTop="06dp"
             android:layout_marginBottom="06dp"
             android:layout_marginStart="10dp"
@@ -59,8 +63,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Weight"
+            android:textSize="14dp"
+            android:textStyle="italic"
             android:layout_below="@+id/billing_item_name"
-            android:layout_marginTop="06dp"
+            android:layout_marginTop="04dp"
             android:layout_marginBottom="06dp"
             android:layout_marginStart="10dp"
 
@@ -84,6 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/Rs"
+                    android:textSize="13dp"
                     android:layout_marginEnd="2dp"/>
 
                 <TextView
@@ -91,6 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:inputType="number"
+                    android:textSize="13dp"
                     android:text="Price" />
 
                 <TextView
@@ -198,7 +206,7 @@
             android:layout_below="@+id/billing_item_quantity_card_view"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/trash_icon"
             />
 

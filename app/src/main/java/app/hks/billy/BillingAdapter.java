@@ -1,13 +1,16 @@
 package app.hks.billy;
 
+import android.drm.DrmManagerClient;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -19,7 +22,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
@@ -71,6 +76,8 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
 
         Button increaseQuantityButton, decreaseQuantityButton;
 
+        ImageView moveItemToBinImageView;
+
         FirebaseFirestore firebaseFirestore;
 
         String userId, strTotalMrpSum;
@@ -95,6 +102,7 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
             increaseQuantityButton = itemView.findViewById(R.id.billing_increase_quantity_button);
             decreaseQuantityButton = itemView.findViewById(R.id.billing_decrease_item_quantity_button);
             invoiceNumber = itemView.findViewById(R.id.billing_item_invoice_number);
+            moveItemToBinImageView = itemView.findViewById(R.id.billing_item_delete_icon);
 
 
             increaseQuantityButton.setOnClickListener(new View.OnClickListener() {
@@ -353,6 +361,103 @@ public class BillingAdapter extends FirestoreRecyclerAdapter<ModelBillItems, Bil
                 }
             });
 
+
+            moveItemToBinImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final String invNum = String.valueOf(invoiceNumber.getText());
+                    String eanNUm = String.valueOf(itemNumber.getText());
+                    String strItemQuantity = String.valueOf(itemQuantity.getText());
+
+                    final int intItemQuantity = Integer.parseInt(strItemQuantity);
+
+                    final String strItemTotalCost = String.valueOf(totalItemCost.getText());
+
+                    final int intTotalItemCost = Integer.parseInt(strItemTotalCost);
+
+                    firebaseFirestore.collection("users")
+                            .document(userId)
+                            .collection("bills")
+                            .document(invNum)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                    if(task.isSuccessful())
+                                    {
+                                        DocumentSnapshot documentSnapshot = task.getResult();
+
+                                        String strTotalItemsMrp = documentSnapshot.getString("total_items_mrp");
+                                        String strTotalItemsCount = documentSnapshot.getString("total_items_count");
+
+                                        int intTotalItemsCount = Integer.parseInt(strTotalItemsCount);
+
+                                        intTotalItemsCount = intTotalItemsCount-(intItemQuantity);
+                                        strTotalItemsCount = String.valueOf(intTotalItemsCount);
+
+                                        int intTotalItemsMrp = Integer.parseInt(strTotalItemsMrp);
+                                        intTotalItemsMrp = intTotalItemsMrp-intTotalItemCost;
+
+                                        strTotalItemsMrp = String.valueOf(intTotalItemsMrp);
+
+                                        firebaseFirestore.collection("users")
+                                                .document(userId)
+                                                .collection("bills")
+                                                .document(invNum)
+                                                .update("total_items_mrp", strTotalItemsMrp,
+                                                        "total_items_count", strTotalItemsCount)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                            }
+                                        });
+                                    }
+                                    else
+                                    {
+
+                                    }
+
+
+                                }
+                            });
+
+
+
+
+                    DocumentReference doRef = firebaseFirestore.collection("users")
+                            .document(userId)
+                            .collection("bills")
+                            .document(invNum)
+                            .collection(invNum)
+                            .document(eanNUm);
+
+                    doRef.delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+
+
+
+                }
+            });
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

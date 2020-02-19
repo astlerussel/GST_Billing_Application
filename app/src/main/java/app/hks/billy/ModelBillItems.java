@@ -34,10 +34,10 @@ public class ModelBillItems {
     public String getItemQuantity() { return  item_quantity;}
 
     public String getTotalItemCost() {
-        int itemCost  = Integer.parseInt(item_cost);
+        double itemCost  = Double.parseDouble(item_cost);
         int itemQuantity = Integer.parseInt(item_quantity);
 
-        int totalItemCost = itemCost*itemQuantity;
+        double totalItemCost = itemCost*itemQuantity;
 
         return total_item_cost = String.valueOf(totalItemCost);
     }

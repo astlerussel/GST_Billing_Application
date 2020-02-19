@@ -35,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -105,6 +106,7 @@ public class BillingActivity extends AppCompatActivity {
 
 
 
+
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         //userId = firebaseAuth.getCurrentUser().getUid();
@@ -161,6 +163,7 @@ public class BillingActivity extends AppCompatActivity {
 
                     }
                 });
+
 
 
 
@@ -327,10 +330,12 @@ public class BillingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String strSingleInvoiceNumber = String.valueOf(intInvoNumber);
+
                 Intent intent = new Intent(BillingActivity.this, CheckoutActivity.class);
                 intent.putExtra("invoice_complete_number", strInvoNumber);
                 intent.putExtra("invoice_character", strInvioceCharCount);
-                intent.putExtra("invoice_number", intInvoNumber);
+                intent.putExtra("invoice_number", strSingleInvoiceNumber);
                 startActivity(intent);
 
             }
