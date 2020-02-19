@@ -330,10 +330,12 @@ public class BillingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String strSingleInvoiceNumber = String.valueOf(intInvoNumber);
+
                 Intent intent = new Intent(BillingActivity.this, CheckoutActivity.class);
                 intent.putExtra("invoice_complete_number", strInvoNumber);
                 intent.putExtra("invoice_character", strInvioceCharCount);
-                intent.putExtra("invoice_number", intInvoNumber);
+                intent.putExtra("invoice_number", strSingleInvoiceNumber);
                 startActivity(intent);
 
             }

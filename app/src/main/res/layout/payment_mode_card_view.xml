@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,19 +11,18 @@
     android:layout_marginTop="05dp"
     android:layout_marginBottom="03dp"
     android:layout_marginStart="06dp"
-    android:layout_marginEnd="06dp"
-    >
+    android:layout_marginEnd="06dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                         android:layout_marginStart="18dp"
                         />
                     <TextView
-                        android:id="@+id/checkout_activity_invoice_number"
+                        android:id="@+id/payment_activity_invoice_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="- -"
@@ -58,8 +58,6 @@
                 </RelativeLayout>
 
             </LinearLayout>
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -82,7 +80,7 @@
                         android:layout_marginStart="18dp"
                         />
                     <TextView
-                        android:id="@+id/checkout_activity_gstin_number"
+                        android:id="@+id/payment_activity_gstin_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="- -"
@@ -95,7 +93,6 @@
 
 
             </LinearLayout>
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -124,133 +121,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TOTAL ITEMS"
-                        android:textSize="14dp"
+                        android:text="SUB TOTAL"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
                         android:layout_marginStart="18dp"
                         />
                     <TextView
-                        android:id="@+id/checkout_activity_total_number_of_items"
+                        android:id="@+id/payment_activity_sub_total_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="- -"
-                        android:textSize="15dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"
-                        />
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#e24813"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="05dp"
-                    android:layout_marginBottom="05dp"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TOTAL MRP"
-                        android:textSize="14dp"
-                        android:layout_marginStart="18dp"
-                        />
-                    <TextView
-                        android:id="@+id/checkout_activity_total_mrp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="- -"
-                        android:textSize="15dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="18dp"
-                        />
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="05dp"
-                    android:layout_marginBottom="05dp"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="State GST @ 2.5%"
-                        android:textSize="14dp"
-                        android:layout_marginStart="18dp"
-                        />
-
-                    <TextView
-                        android:id="@+id/checkout_activity_state_gst_amount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="18dp"
-                        android:text="- -"
-                        android:textSize="15dp" />
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="05dp"
-                    android:layout_marginBottom="05dp"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Central GST @ 2.5%"
-                        android:textSize="14dp"
-                        android:layout_marginStart="18dp"
-                        />
-                    <TextView
-                        android:id="@+id/checkout_activity_central_gst_amount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="- -"
-                        android:textSize="15dp"
+                        android:textSize="17dp"
+                        android:textColor="#000000"
                         android:layout_marginStart="10dp"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="18dp"
@@ -270,6 +153,44 @@
                 android:layout_marginEnd="10dp"
                 />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PAYMENT METHOD"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:textColor="#7728a8"
+                        android:layout_marginStart="18dp"
+                        />
+
+                    <Spinner
+                        android:layout_width="85dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="18dp"
+
+                        />
+
+
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -281,29 +202,113 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="05dp"
-                    android:layout_marginBottom="13dp"
+                    android:layout_marginBottom="05dp"
                     >
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SUB TOTAL"
-                        android:textSize="15dp"
-                        android:textColor="#000000"
+                        android:text="AMOUNT RECEIVED"
+                        android:textSize="13dp"
                         android:layout_marginStart="18dp"
                         />
                     <TextView
-                        android:id="@+id/checkout_activity_sub_total_amount"
+                        android:id="@+id/payment_activity_amount_received"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="- -"
-                        android:textSize="16dp"
-                        android:textColor="#000000"
+                        android:textSize="15dp"
                         android:layout_marginStart="10dp"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="18dp"
                         />
                 </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="05dp"
+                    android:layout_marginBottom="05dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CHANGE"
+                        android:textSize="13dp"
+                        android:layout_marginStart="18dp"
+                        />
+                    <TextView
+                        android:id="@+id/payment_activity_change_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="- -"
+                        android:textSize="15dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="18dp"
+                        />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/checkout_activity_cancel_payment_card_button"
+                            android:layout_width="89dp"
+                            android:layout_height="36dp"
+                            android:text="CANCEL"
+                            android:textColor="@color/completeWhiteColor"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentStart="true"
+                            android:background="@drawable/discard_button_style"
+                            android:layout_marginStart="35dp"
+                            />
+
+                        <Button
+                            android:id="@+id/checkout_activity_confirm_payment_card_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="CONFIRM PAYMENT"
+                            android:textColor="@color/completeWhiteColor"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@drawable/checkout_edittext_style"
+                            android:layout_marginEnd="35dp"
+                            />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
 
 
             </LinearLayout>
