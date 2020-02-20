@@ -87,6 +87,9 @@ public class CheckoutActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(CheckoutActivity.this, PaymentActivity.class);
+                intent.putExtra("invoice_complete_number", strInvoiceNumber);
+                intent.putExtra("invoice_character", strInvioceChar);
+                intent.putExtra("invoice_number", intInvoNumber);
                 startActivity(intent);
                 customType(CheckoutActivity.this,"bottom-to-up");
             }
@@ -133,6 +136,12 @@ public class CheckoutActivity extends AppCompatActivity {
                                 strTotalItemsSubTotalAmount = String.valueOf(intTotalItemsMrp);
 
                                 totalItemsSubTotalAmount.setText(strTotalItemsSubTotalAmount);
+
+                                firebaseFirestore.collection("users")
+                                        .document(userId)
+                                        .collection("bills")
+                                        .document(strInvoiceNumber)
+                                        .update("sub_total_amount", strTotalItemsSubTotalAmount);
 
 
 
