@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 totalMrpMao.put("total_items_mrp", "0");
                 totalMrpMao.put("total_items_count","0");
 
+
                 DocumentReference documentReference = firebaseFirestore.collection("users/"+userId+"/bills").document(finalInvoiceNumber);
 
                 documentReference.set(totalMrpMao)
